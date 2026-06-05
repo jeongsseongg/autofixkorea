@@ -1,0 +1,206 @@
+<section class="afbr">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap');
+.afbr,.afbr*{box-sizing:border-box;margin:0;padding:0;}
+.afbr{font-family:'Noto Sans KR',sans-serif;background:#efe9df;color:#080808;width:100%;overflow:hidden;}
+.afbr-wrap{max-width:980px;margin:0 auto;padding:0 18px 58px;}
+.afbr-hero{position:relative;min-height:420px;background:#090909;color:#fff;overflow:hidden;}
+.afbr-hero:before{content:"";position:absolute;inset:0;background:url('https://raw.githubusercontent.com/jeongsseongg/autofixkorea/main/review-images/review-02.jpg') center/cover no-repeat;filter:brightness(.5);}
+.afbr-hero:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.2),rgba(0,0,0,.92));}
+.afbr-hero-in{position:relative;z-index:2;max-width:980px;margin:0 auto;padding:82px 28px 44px;min-height:420px;display:flex;flex-direction:column;justify-content:flex-end;}
+.afbr-kicker{font-size:10px;font-weight:900;letter-spacing:.28em;color:#d4a64a;text-transform:uppercase;margin-bottom:14px;}
+.afbr-hero h2{font-size:clamp(30px,5.2vw,58px);font-weight:900;line-height:1.02;letter-spacing:-.055em;margin-bottom:18px;}
+.afbr-hero p{max-width:620px;font-size:15px;font-weight:600;line-height:1.75;color:rgba(255,255,255,.82);word-break:keep-all;}
+.afbr-section-title{text-align:center;font-size:25px;font-weight:900;letter-spacing:-.04em;padding:48px 0 24px;}
+.afbr-section-title span{color:#a67825;}
+.afbr-grid{display:grid;grid-template-columns:1fr;gap:24px;}
+.afbr-card{border:0;background:#fff;border-radius:10px;overflow:hidden;text-align:left;box-shadow:0 1px 0 rgba(0,0,0,.08),0 14px 34px rgba(0,0,0,.08);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;width:100%;}
+.afbr-card:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(0,0,0,.14);}
+.afbr-img{height:310px;background-size:cover;background-position:center;position:relative;}
+.afbr-img:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent 48%);}
+.afbr-chip{position:absolute;left:18px;top:18px;height:27px;padding:0 11px;background:#0b0b0b;color:#fff;border-radius:3px;font-size:11px;font-weight:900;display:inline-flex;align-items:center;letter-spacing:-.02em;}
+.afbr-chip.buy{background:#d82424;}
+.afbr-chip.repair{background:#1b5fd8;}
+.afbr-chip.unsold{background:#1f8d52;}
+.afbr-views{position:absolute;right:18px;top:18px;height:27px;padding:0 10px;background:rgba(255,255,255,.92);border-radius:3px;color:#111;font-size:11px;font-weight:800;display:inline-flex;align-items:center;}
+.afbr-body{padding:22px 22px 24px;}
+.afbr-date{font-size:10px;font-weight:900;color:#b48735;letter-spacing:.12em;margin-bottom:10px;text-transform:uppercase;}
+.afbr-card h3{font-size:21px;font-weight:900;letter-spacing:-.045em;line-height:1.25;margin-bottom:10px;color:#080808;}
+.afbr-desc{font-size:14px;font-weight:600;line-height:1.75;color:#4b4b4b;word-break:keep-all;margin-bottom:16px;}
+.afbr-meta{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #eee;padding-top:14px;gap:12px;}
+.afbr-car{font-size:12px;font-weight:900;color:#111;}
+.afbr-price{font-size:15px;font-weight:900;color:#d82424;white-space:nowrap;}
+.afbr-more{font-size:12px;font-weight:900;color:#111;margin-top:14px;display:inline-block;}
+.afbr-dim{position:fixed;inset:0;background:rgba(0,0,0,.76);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;}
+.afbr-dim.on{display:flex;}
+.afbr-modal{width:min(920px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:12px;position:relative;box-shadow:0 28px 80px rgba(0,0,0,.42);}
+.afbr-close{position:absolute;right:14px;top:14px;z-index:3;width:38px;height:38px;border:0;border-radius:50%;background:rgba(0,0,0,.68);color:#fff;font-size:24px;line-height:1;cursor:pointer;}
+.afbr-modal-img{height:430px;background-size:cover;background-position:center;}
+.afbr-modal-body{padding:28px;}
+.afbr-modal-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px;}
+.afbr-modal-type{font-size:12px;font-weight:900;color:#b48735;letter-spacing:.12em;}
+.afbr-modal-title{font-size:30px;font-weight:900;letter-spacing:-.05em;line-height:1.18;margin-bottom:12px;}
+.afbr-modal-sub{font-size:14px;font-weight:700;color:#666;line-height:1.7;margin-bottom:22px;}
+.afbr-detail{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
+.afbr-detail div{background:#f6f3ee;border-radius:8px;padding:14px;}
+.afbr-detail b{display:block;font-size:11px;color:#9d7a3f;margin-bottom:5px;}
+.afbr-detail span{font-size:15px;font-weight:900;color:#111;}
+.afbr-process{background:#080808;color:#fff;border-radius:10px;padding:20px;}
+.afbr-process h4{font-size:16px;font-weight:900;margin-bottom:12px;color:#d4a64a;}
+.afbr-process p{font-size:14px;font-weight:600;line-height:1.8;color:rgba(255,255,255,.86);word-break:keep-all;}
+@media(min-width:760px){
+  .afbr-grid{grid-template-columns:repeat(2,1fr);}
+  .afbr-card:first-child{grid-column:1 / -1;}
+  .afbr-card:first-child .afbr-img{height:420px;}
+}
+@media(max-width:520px){
+  .afbr-wrap{padding-left:14px;padding-right:14px;}
+  .afbr-hero-in{padding:64px 22px 34px;min-height:360px;}
+  .afbr-hero{min-height:360px;}
+  .afbr-hero h2{font-size:32px;}
+  .afbr-img{height:250px;}
+  .afbr-body{padding:19px 18px 21px;}
+  .afbr-card h3{font-size:19px;}
+  .afbr-meta{align-items:flex-start;flex-direction:column;}
+  .afbr-modal-img{height:280px;}
+  .afbr-modal-body{padding:22px 18px;}
+  .afbr-modal-title{font-size:24px;}
+  .afbr-detail{grid-template-columns:1fr;}
+}
+</style>
+
+<div class="afbr-hero">
+  <div class="afbr-hero-in">
+    <div class="afbr-kicker">Accident Car Review</div>
+    <h2>실제 사고차<br>매입 후기</h2>
+    <p>사진 기준으로 차량 상태를 먼저 확인하고, 사고 유형별 처리 방향과 최종 매입 금액까지 투명하게 안내합니다.</p>
+  </div>
+</div>
+
+<div class="afbr-wrap">
+  <h3 class="afbr-section-title">최근 <span>매입후기</span></h3>
+  <div class="afbr-grid" id="afbrGrid"></div>
+</div>
+
+<div class="afbr-dim" id="afbrDim" aria-hidden="true">
+  <div class="afbr-modal" role="dialog" aria-modal="true">
+    <button type="button" class="afbr-close" id="afbrClose" aria-label="닫기">×</button>
+    <div class="afbr-modal-img" id="afbrModalImg"></div>
+    <div class="afbr-modal-body">
+      <div class="afbr-modal-top">
+        <div class="afbr-modal-type" id="afbrModalType"></div>
+        <div class="afbr-views" id="afbrModalViews"></div>
+      </div>
+      <h3 class="afbr-modal-title" id="afbrModalTitle"></h3>
+      <p class="afbr-modal-sub" id="afbrModalSub"></p>
+      <div class="afbr-detail">
+        <div><b>차량</b><span id="afbrModalCar"></span></div>
+        <div><b>처리일</b><span id="afbrModalDate"></span></div>
+        <div><b>최종 금액</b><span id="afbrModalPrice"></span></div>
+      </div>
+      <div class="afbr-process">
+        <h4>매입 과정</h4>
+        <p id="afbrModalProcess"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+var IMG='https://raw.githubusercontent.com/jeongsseongg/autofixkorea/main/review-images/';
+var reviews=[
+  {
+    type:'사고차매입', cls:'buy', date:'2026.06.05', views:'조회 1,284',
+    img:'review-02.jpg', car:'중형 세단', title:'후방이 심하게 밀린 전손급 차량 매입',
+    short:'후방 충격으로 트렁크 플로어와 골격 손상이 큰 차량. 일반 판매가 어려워 사고차 매입으로 정리했습니다.',
+    price:'3,850,000원',
+    process:'사진 접수 후 후방 골격 손상, 범퍼·트렁크·리어패널 파손 범위를 확인했습니다. 수리비가 차량가 대비 높아 전손급 사고차로 분류했고, 당일 견인 일정 확정 후 차량 확인, 이전 서류 접수, 최종 3,850,000원으로 매입 완료했습니다.'
+  },
+  {
+    type:'사고차매입', cls:'buy', date:'2026.06.04', views:'조회 972',
+    img:'review-11.jpg', car:'검정 세단', title:'전면부 파손 세단, 수리 대신 즉시 매각',
+    short:'본넷과 전면 범퍼가 접힌 상태라 수리 견적 부담이 컸던 차량입니다.',
+    price:'4,200,000원',
+    process:'전면 사진 기준으로 라디에이터 서포트, 범퍼, 본넷, 라이트 손상 가능성을 먼저 산정했습니다. 고객은 수리 후 판매보다 즉시 매각을 원했고, 현장 확인 후 감가 항목을 설명한 뒤 최종 4,200,000원에 매입했습니다.'
+  },
+  {
+    type:'사고차매입', cls:'buy', date:'2026.06.03', views:'조회 1,106',
+    img:'review-24.jpg', car:'검정 세단', title:'전면 충격이 큰 사고차 현장 매입',
+    short:'앞쪽 부품 파손이 많고 운행이 어려운 상태라 견인과 매입을 함께 진행했습니다.',
+    price:'5,100,000원',
+    process:'전면 충격으로 범퍼, 라이트, 냉각계통, 보닛 주변 파손이 확인됐습니다. 사고 부위 사진을 토대로 1차 견적을 안내했고, 현장 확인 후 추가 감가 없이 견인부터 서류 처리까지 진행해 최종 5,100,000원으로 마무리했습니다.'
+  },
+  {
+    type:'사고차수리', cls:'repair', date:'2026.06.02', views:'조회 846',
+    img:'review-10.jpg', car:'쉐보레 세단', title:'전면 하부 파손 차량 수리 견적 후 매입',
+    short:'범퍼와 하부 손상이 있어 수리비와 매입가를 비교한 뒤 매각으로 결정했습니다.',
+    price:'2,750,000원',
+    process:'전면 범퍼와 하부 파손 상태를 기준으로 수리 가능 금액과 사고차 매입 금액을 함께 비교했습니다. 고객이 수리 후 재판매 리스크를 원하지 않아 미수리 상태로 매각을 선택했고, 최종 2,750,000원에 매입했습니다.'
+  },
+  {
+    type:'사고차수리', cls:'repair', date:'2026.06.01', views:'조회 731',
+    img:'review-25.jpg', car:'기아 레이', title:'앞 모서리 파손 경차 수리비 비교 상담',
+    short:'라이트와 범퍼 모서리 파손이 있는 경차. 수리비 대비 매각 조건을 계산했습니다.',
+    price:'1,680,000원',
+    process:'앞 모서리 충격으로 라이트, 범퍼, 휀더 쪽 손상이 확인됐습니다. 부품 교환 수리비와 사고 이력 감가를 비교했고, 고객 요청에 따라 수리하지 않고 그대로 매각했습니다. 최종 매입 금액은 1,680,000원입니다.'
+  },
+  {
+    type:'미수선후매각', cls:'unsold', date:'2026.05.31', views:'조회 689',
+    img:'review-17.jpg', car:'회색 세단', title:'측면 문짝 파손 차량 미수선 후 매각',
+    short:'문짝과 사이드 하단 손상이 있어 보험 수리 전 미수선 상태로 정리했습니다.',
+    price:'3,300,000원',
+    process:'측면 문짝과 하단부 손상 사진을 확인하고, 미수선 처리 시 남는 금액과 매각 금액을 비교했습니다. 수리 후 감가를 감수하기보다 미수선 상태에서 빠르게 매각하는 쪽이 유리하다고 판단해 최종 3,300,000원에 매입 완료했습니다.'
+  }
+];
+var grid=document.getElementById('afbrGrid');
+var dim=document.getElementById('afbrDim');
+var closeBtn=document.getElementById('afbrClose');
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function openModal(r){
+  document.getElementById('afbrModalImg').style.backgroundImage="url('"+IMG+r.img+"')";
+  document.getElementById('afbrModalType').textContent=r.type;
+  document.getElementById('afbrModalViews').textContent=r.views;
+  document.getElementById('afbrModalTitle').textContent=r.title;
+  document.getElementById('afbrModalSub').textContent=r.short;
+  document.getElementById('afbrModalCar').textContent=r.car;
+  document.getElementById('afbrModalDate').textContent=r.date;
+  document.getElementById('afbrModalPrice').textContent=r.price;
+  document.getElementById('afbrModalProcess').textContent=r.process;
+  dim.classList.add('on');
+  dim.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  dim.classList.remove('on');
+  dim.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+reviews.forEach(function(r,i){
+  var btn=document.createElement('button');
+  btn.type='button';
+  btn.className='afbr-card';
+  btn.innerHTML=
+    '<div class="afbr-img" style="background-image:url(\''+IMG+r.img+'\')">'+
+      '<span class="afbr-chip '+r.cls+'">'+esc(r.type)+'</span>'+
+      '<span class="afbr-views">'+esc(r.views)+'</span>'+
+    '</div>'+
+    '<div class="afbr-body">'+
+      '<div class="afbr-date">'+esc(r.date)+'</div>'+
+      '<h3>'+esc(r.title)+'</h3>'+
+      '<p class="afbr-desc">'+esc(r.short)+'</p>'+
+      '<div class="afbr-meta">'+
+        '<div class="afbr-car">'+esc(r.car)+'</div>'+
+        '<div class="afbr-price">'+esc(r.price)+'</div>'+
+      '</div>'+
+      '<span class="afbr-more">상세 매입 과정 보기 →</span>'+
+    '</div>';
+  btn.addEventListener('click',function(){openModal(reviews[i]);});
+  grid.appendChild(btn);
+});
+closeBtn.addEventListener('click',closeModal);
+dim.addEventListener('click',function(e){if(e.target===dim)closeModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+})();
+</script>
+</section>
