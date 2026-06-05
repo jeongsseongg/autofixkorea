@@ -1,0 +1,348 @@
+<section class="rv6">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap');
+.rv6,.rv6*{box-sizing:border-box;margin:0;padding:0;}
+.rv6{font-family:'Noto Sans KR',sans-serif;background:#fff;position:relative;}
+
+.rv6-hd{
+  max-width:1480px;margin:0 auto;
+  padding:48px 52px 24px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+}
+.rv6-eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;color:#bbb;text-transform:uppercase;margin-bottom:8px;}
+.rv6-title{font-size:clamp(24px,2.6vw,38px);font-weight:900;color:#0d1420;letter-spacing:-.05em;line-height:1.12;}
+.rv6-title em{color:#1a5de8;font-style:normal;}
+.rv6-stats{display:flex;align-items:center;gap:18px;padding-bottom:2px;}
+.rv6-sv{font-size:22px;font-weight:900;color:#0d1420;letter-spacing:-.03em;line-height:1;}
+.rv6-sl{font-size:10px;font-weight:600;color:#c4c4c4;letter-spacing:.04em;margin-top:3px;text-align:right;}
+.rv6-sep{width:1px;height:30px;background:#ebebeb;}
+
+.rv6-clip{overflow:hidden;position:relative;}
+.rv6-track{
+  display:flex;gap:4px;
+  will-change:transform;
+  cursor:grab;user-select:none;-webkit-user-select:none;
+}
+.rv6-track.anim{transition:transform .62s cubic-bezier(.22,.61,.36,1);}
+.rv6-track.grab{cursor:grabbing;transition:none!important;}
+
+.rv6-card{
+  flex-shrink:0;
+  position:relative;overflow:hidden;
+  height:360px;
+}
+.rv6-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .5s ease;}
+.rv6-card:hover .rv6-bg{transform:scale(1.03);}
+.rv6-bg.img{filter:brightness(.78);}
+.rv6-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 0%,transparent 25%,rgba(0,0,0,.3) 55%,rgba(0,0,0,.84) 100%);
+}
+.rv6-badges{position:absolute;top:18px;left:18px;display:flex;align-items:center;gap:6px;z-index:3;}
+.rv6-tbadge{height:22px;padding:0 9px;background:rgba(255,255,255,.9);border-radius:2px;font-size:9.5px;font-weight:800;color:#0d1420;letter-spacing:.01em;display:inline-flex;align-items:center;}
+.rv6-nbadge{height:22px;padding:0 8px;background:#d41f1f;border-radius:2px;font-size:9px;font-weight:900;color:#fff;letter-spacing:.06em;display:inline-flex;align-items:center;}
+.rv6-body{position:absolute;bottom:0;left:0;right:0;padding:16px 18px 20px;z-index:3;}
+.rv6-stars{display:flex;align-items:center;gap:1px;margin-bottom:8px;}
+.rv6-sf{font-size:13px;color:#ffc843;}
+.rv6-sh{font-size:13px;color:#ffc843;opacity:.5;}
+.rv6-se{font-size:13px;color:rgba(255,255,255,.22);}
+.rv6-rnum{font-size:10px;font-weight:700;color:rgba(255,255,255,.5);margin-left:5px;}
+.rv6-txt{font-size:13.5px;font-weight:700;line-height:1.6;color:#fff;word-break:keep-all;letter-spacing:-.025em;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.rv6-meta{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(255,255,255,.14);gap:10px;}
+.rv6-who{display:flex;align-items:center;gap:8px;min-width:0;}
+.rv6-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;border:1.5px solid rgba(255,255,255,.34);}
+.rv6-nm{font-size:12px;font-weight:800;color:#fff;white-space:nowrap;}
+.rv6-rg{font-size:10px;color:rgba(255,255,255,.5);margin-top:1px;white-space:nowrap;}
+.rv6-veh{font-size:10px;font-weight:700;color:rgba(255,255,255,.46);text-align:right;white-space:nowrap;}
+.rv6-dt{font-size:9.5px;color:rgba(255,255,255,.34);margin-top:1px;text-align:right;}
+
+.rv6-ctrl{
+  max-width:1480px;margin:0 auto;
+  padding:14px 52px 44px;
+  display:flex;align-items:center;gap:14px;
+}
+.rv6-prog{
+  height:2px;
+  background:#ebebeb;
+  flex:1;
+  position:relative;
+  border-radius:2px;
+}
+.rv6-progfill{
+  position:absolute;top:0;left:0;height:100%;
+  background:#0d1420;
+  border-radius:2px;
+  transition:width .5s ease;
+}
+.rv6-cnt{font-size:12.5px;font-weight:700;color:#bbb;white-space:nowrap;letter-spacing:.02em;flex-shrink:0;}
+.rv6-cnt b{color:#0d1420;}
+.rv6-navs{display:flex;gap:7px;flex-shrink:0;}
+.rv6-navbtn{width:40px;height:40px;border-radius:50%;border:1.5px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;}
+.rv6-navbtn:hover{background:#0d1420;border-color:#0d1420;}
+.rv6-navbtn:hover path{stroke:#fff;}
+.rv6-navbtn path{stroke:#333;transition:stroke .18s;}
+
+@media(max-width:860px){
+  .rv6-hd,.rv6-ctrl{padding-left:24px;padding-right:24px;}
+  .rv6-hd{flex-direction:column;align-items:flex-start;gap:14px;padding-top:36px;}
+}
+@media(max-width:520px){
+  .rv6-hd,.rv6-ctrl{padding-left:16px;padding-right:16px;}
+  .rv6-hd{padding-top:28px;}
+  .rv6-stats{display:none;}
+  .rv6-title{font-size:22px;}
+}
+</style>
+
+<div class="rv6-hd">
+  <div>
+    <p class="rv6-eyebrow">Real Customer Review</p>
+    <h2 class="rv6-title">실제 사고차 사진과 후기가 증명하는 <em>오토픽스코리아</em></h2>
+  </div>
+  <div class="rv6-stats">
+    <div><div class="rv6-sv">2,847</div><div class="rv6-sl">누적 상담</div></div>
+    <div class="rv6-sep"></div>
+    <div><div class="rv6-sv">4.8</div><div class="rv6-sl">평균 별점</div></div>
+    <div class="rv6-sep"></div>
+    <div><div class="rv6-sv">94%</div><div class="rv6-sl">재상담 의향</div></div>
+  </div>
+</div>
+
+<div class="rv6-clip" id="rv6Clip">
+  <div class="rv6-track" id="rv6Track"></div>
+</div>
+
+<div class="rv6-ctrl">
+  <div class="rv6-prog"><div class="rv6-progfill" id="rv6Fill"></div></div>
+  <span class="rv6-cnt"><b id="rv6Cur">1</b>&thinsp;/&thinsp;<span id="rv6Tot">30</span></span>
+  <div class="rv6-navs">
+    <button class="rv6-navbtn" id="rv6Prev" aria-label="이전">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14.5 6L8.5 12L14.5 18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="rv6-navbtn" id="rv6Next" aria-label="다음">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9.5 6L15.5 12L9.5 18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+function dateSeed(){var d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
+function lcg(s){return(s*1664525+1013904223)&0x7fffffff;}
+function seededShuffle(arr,seed){
+  var a=arr.slice(),s=seed;
+  for(var i=a.length-1;i>0;i--){s=lcg(s);var j=s%(i+1);var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+function dDate(n){
+  var d=new Date();d.setDate(d.getDate()-n);
+  return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+}
+function starHtml(r){
+  var full=Math.floor(r);
+  var frac=+(r%1).toFixed(1);
+  var half=frac>=0.3?1:0;
+  var empty=5-full-half;
+  var h='';
+  for(var i=0;i<full;i++) h+='<span class="rv6-sf">★</span>';
+  if(half) h+='<span class="rv6-sh">★</span>';
+  for(var j=0;j<empty;j++) h+='<span class="rv6-se">★</span>';
+  h+='<span class="rv6-rnum">'+r.toFixed(1)+'</span>';
+  return h;
+}
+
+var IMG_BASE='https://raw.githubusercontent.com/jeongsseongg/autofixkorea/main/review-images/';
+var BG={
+  '전손차량':'linear-gradient(155deg,#0c1d38 0%,#163059 50%,#0a1526 100%)',
+  '전면파손':'linear-gradient(155deg,#1e0808 0%,#3c1010 50%,#150404 100%)',
+  '측면충돌':'linear-gradient(155deg,#001828 0%,#003d58 50%,#001020 100%)',
+  '에어백전개':'linear-gradient(155deg,#091809 0%,#183818 50%,#050f05 100%)',
+  '엔진룸파손':'linear-gradient(155deg,#1c1500 0%,#3a2e00 50%,#100d00 100%)',
+  '고장차매입':'linear-gradient(155deg,#09091c 0%,#17173c 50%,#050510 100%)',
+  '사고차매입':'linear-gradient(155deg,#0c1a0e 0%,#1a3020 50%,#060e08 100%)'
+};
+var PAL=[
+  {bg:'#1e3a6e',c:'#8ab8ff'},{bg:'#1a4d2e',c:'#7ad4a0'},
+  {bg:'#3d1f5e',c:'#c4a0ff'},{bg:'#4d3200',c:'#fcd07a'},
+  {bg:'#4d1010',c:'#ff9999'},{bg:'#1a3d35',c:'#6ee7cf'}
+];
+
+var BASE=[
+  {n:'김**',r:'서울 강남',v:'국산 대형 세단',t:'전면파손',dA:0,p:0,star:5.0,img:'review-01.jpg',
+   tx:'전면부가 크게 파손돼 폐차만 생각했는데 사진 확인 후 바로 매입가를 잡아주셨습니다. 견인 일정과 서류까지 한 번에 정리돼서 편했습니다.'},
+  {n:'박**',r:'인천 서구',v:'중형 세단',t:'전손차량',dA:1,p:2,star:5.0,img:'review-02.jpg',
+   tx:'후방이 심하게 밀린 차량이라 처리 걱정이 컸습니다. 손상 부위를 보고도 매입 가능하다고 안내해 주셔서 빠르게 정리했습니다.'},
+  {n:'강**',r:'경기 부천',v:'검정 SUV',t:'전면파손',dA:5,p:1,star:5.0,img:'review-03.jpg',
+   tx:'앞쪽 골격과 범퍼 쪽 파손이 있었는데 현장 사진만으로 견적을 먼저 받았습니다. 금액 설명이 명확해서 결정이 쉬웠습니다.'},
+  {n:'이**',r:'서울 송파',v:'흰색 SUV',t:'측면충돌',dA:7,p:3,star:5.0,img:'review-04.jpg',
+   tx:'앞 휀더와 하체 쪽 손상이 커서 일반 매매는 어려웠습니다. 사고 부위를 정확히 보고 매입 기준을 설명해 준 점이 좋았습니다.'},
+  {n:'최**',r:'경기 화성',v:'검정 SUV',t:'전손차량',dA:11,p:0,star:5.0,img:'review-05.jpg',
+   tx:'도로 이탈 후 전면이 크게 부서진 차량이었는데 견인부터 입금까지 빠르게 처리됐습니다. 복잡한 상황에서 도움이 됐습니다.'},
+  {n:'정**',r:'대전 유성',v:'수입 세단',t:'에어백전개',dA:39,p:2,star:5.0,img:'review-06.jpg',
+   tx:'실내 에어백이 전개된 상태라 감가가 심할 줄 알았습니다. 사진 확인 후 가능한 금액을 바로 제시해 줘서 믿고 맡겼습니다.'},
+  {n:'송**',r:'경남 창원',v:'벤츠 SUV',t:'사고차매입',dA:43,p:4,star:5.0,img:'review-07.jpg',
+   tx:'앞범퍼와 라이트 파손이 있었고 운행도 애매했습니다. 출장 상담으로 차량 상태를 보고 바로 매입 진행해 주셨습니다.'},
+  {n:'윤**',r:'서울 마포',v:'수입 세단',t:'에어백전개',dA:3,p:5,star:4.9,img:'review-08.jpg',
+   tx:'커튼 에어백과 운전석 에어백이 터진 차량이라 매각이 막막했습니다. 실내 사진까지 보고 정확히 상담해 줘서 좋았습니다.'},
+  {n:'오**',r:'부산 해운대',v:'소형 RV',t:'사고차매입',dA:9,p:5,star:4.9,img:'review-09.jpg',
+   tx:'겉으로는 작아 보여도 앞쪽 충격이 있어 일반 판매가 부담됐습니다. 사고차 기준으로 빠르게 견적을 받아 정리했습니다.'},
+  {n:'권**',r:'대구 달서',v:'쉐보레 세단',t:'전면파손',dA:13,p:1,star:4.9,img:'review-10.jpg',
+   tx:'전면 범퍼와 하부 쪽 손상이 있었는데 폐차보다 나은 금액을 받았습니다. 사진 보내고 상담까지 오래 걸리지 않았습니다.'},
+  {n:'문**',r:'경기 성남',v:'검정 세단',t:'전손차량',dA:17,p:3,star:4.9,img:'review-11.jpg',
+   tx:'본넷과 전면부가 크게 접힌 차량이라 정비 견적이 부담됐습니다. 매입 조건을 투명하게 설명해 줘서 바로 진행했습니다.'},
+  {n:'고**',r:'서울 용산',v:'아우디 e-tron',t:'전면파손',dA:21,p:5,star:4.9,img:'review-12.jpg',
+   tx:'전기차 사고라 업체마다 답이 달랐는데 배터리와 전면 손상 기준을 나눠서 설명해 줬습니다. 처리 속도도 빨랐습니다.'},
+  {n:'하**',r:'인천 송도',v:'아우디 세단',t:'에어백전개',dA:29,p:3,star:4.9,img:'review-13.jpg',
+   tx:'운전석 에어백이 터진 차량이라 일반 매매가 어려웠습니다. 사진 확인만으로도 필요한 서류와 절차를 바로 안내받았습니다.'},
+  {n:'추**',r:'전북 전주',v:'볼보 세단',t:'전손차량',dA:45,p:5,star:4.9,img:'review-14.jpg',
+   tx:'차체 상단과 전면 손상이 커서 수리비가 차량가를 넘는 상황이었습니다. 전손 기준으로 빠르게 매입 처리했습니다.'},
+  {n:'남**',r:'경기 고양',v:'수입 SUV',t:'에어백전개',dA:0,p:1,star:4.8,img:'review-15.jpg',
+   tx:'조수석 측면 에어백이 전개된 상태였습니다. 실내와 외관 사진을 같이 보고 견적을 잡아줘서 불필요한 방문을 줄였습니다.'},
+  {n:'장**',r:'충북 청주',v:'전기 해치백',t:'전손차량',dA:8,p:4,star:4.8,img:'review-16.jpg',
+   tx:'차량 옆쪽과 후면 손상이 심해서 처리 방향을 못 정했습니다. 전기차 사고차 매입 기준으로 상담받고 정리했습니다.'},
+  {n:'신**',r:'경기 안산',v:'회색 세단',t:'측면충돌',dA:23,p:0,star:4.8,img:'review-17.jpg',
+   tx:'문짝과 사이드 하단 손상이 눈에 띄는 차량이었습니다. 사고 이력 때문에 판매가 어려웠는데 합리적인 금액으로 매입됐습니다.'},
+  {n:'서**',r:'서울 서초',v:'벤츠 C클래스',t:'사고차매입',dA:33,p:5,star:4.8,img:'review-18.jpg',
+   tx:'앞범퍼와 라이트 쪽 파손이 있었지만 차량 상태를 세부적으로 봐줬습니다. 감가 이유를 설명해 줘서 납득하고 진행했습니다.'},
+  {n:'유**',r:'경기 광명',v:'검정 세단',t:'사고차매입',dA:35,p:0,star:4.8,img:'review-19.jpg',
+   tx:'야간 사고 후 급하게 연락드렸는데 견인 가능 여부부터 알려줬습니다. 현장 사진 기준으로 먼저 견적을 받아 안심됐습니다.'},
+  {n:'민**',r:'충남 천안',v:'검정 세단',t:'전면파손',dA:41,p:3,star:4.8,img:'review-20.jpg',
+   tx:'앞쪽이 파손된 상태로 탁송차에 실려 있던 차량입니다. 수리 대신 매각을 선택했는데 입금까지 깔끔했습니다.'},
+  {n:'조**',r:'경기 용인',v:'흰색 SUV',t:'전면파손',dA:4,p:0,star:4.7,img:'review-21.jpg',
+   tx:'앞휀더와 범퍼, 하체 손상이 같이 있어 수리비가 부담됐습니다. 현장 확인 후 바로 매입 절차를 진행했습니다.'},
+  {n:'한**',r:'강원 원주',v:'흰색 세단',t:'전손차량',dA:15,p:2,star:4.7,img:'review-22.jpg',
+   tx:'도로 밖으로 이탈하며 엔진룸 쪽 손상이 컸습니다. 차량 위치가 애매했는데 견인과 매입을 함께 처리해 줬습니다.'},
+  {n:'변**',r:'서울 노원',v:'중형 SUV',t:'엔진룸파손',dA:25,p:1,star:4.7,img:'review-23.jpg',
+   tx:'본넷을 열어보니 엔진룸 앞쪽 파손이 컸습니다. 수리 견적보다 매각이 낫다는 판단을 도와줘서 빠르게 결정했습니다.'},
+  {n:'공**',r:'인천 연수',v:'검정 세단',t:'전손차량',dA:37,p:1,star:4.7,img:'review-24.jpg',
+   tx:'전면 충격이 심하고 부품 파손이 많아 일반 매입은 힘들었습니다. 사고차 전문 기준으로 가격을 제시받았습니다.'},
+  {n:'임**',r:'대구 수성',v:'기아 레이',t:'사고차매입',dA:2,p:4,star:4.6,img:'review-25.jpg',
+   tx:'앞쪽 모서리와 라이트 부분이 파손된 경차였습니다. 작은 차라도 사고 부위를 제대로 보고 매입해 줘서 만족했습니다.'},
+  {n:'류**',r:'경기 일산',v:'대형 SUV',t:'전면파손',dA:19,p:4,star:4.6,img:'review-26.jpg',
+   tx:'전면 좌측 파손이 크고 휠 주변까지 손상된 차량이었습니다. 사진을 보낸 뒤 견적과 일정 안내가 빨랐습니다.'},
+  {n:'배**',r:'서울 강서',v:'검정 세단',t:'전손차량',dA:27,p:2,star:4.6,img:'review-27.jpg',
+   tx:'도로 사고로 전면부가 크게 파손돼 현장에서 바로 처리 방향이 필요했습니다. 상담 후 견인과 매입이 순서대로 진행됐습니다.'},
+  {n:'최**',r:'부산 사상',v:'벨로스터 N',t:'사고차매입',dA:1,p:3,star:4.5,img:'review-28.jpg',
+   tx:'앞범퍼와 측면 스크래치가 함께 있는 차량이었습니다. 튜닝 차량이라 걱정했는데 상태를 보고 적정 금액을 받았습니다.'},
+  {n:'노**',r:'경기 수원',v:'흰색 전기차',t:'전면파손',dA:31,p:4,star:4.5,img:'review-29.jpg',
+   tx:'전기차 전면부와 휠 쪽 손상이 있어 일반 매매가 어려웠습니다. 사고 부위를 기준으로 빠르게 매입가를 받았습니다.'},
+  {n:'도**',r:'서울 중랑',v:'레인지로버 이보크',t:'고장차매입',dA:6,p:2,star:4.4,img:'review-30.jpg',
+   tx:'외관보다 고장 증상이 문제였던 차량입니다. 운행이 부담스러웠는데 고장차 기준으로 상담하고 바로 매각했습니다.'}
+];
+
+var shuffled=seededShuffle(BASE,dateSeed());
+var DATA=shuffled.slice().sort(function(a,b){return a.dA-b.dA;});
+var N=DATA.length;
+var CLONE=5;
+var GAP=4;
+
+var track=document.getElementById('rv6Track');
+var fill=document.getElementById('rv6Fill');
+var curEl=document.getElementById('rv6Cur');
+var totEl=document.getElementById('rv6Tot');
+totEl.textContent=N;
+
+function cardWidth(){
+  var vw=window.innerWidth;
+  if(vw<=520) return Math.floor(vw*0.72);
+  if(vw<=860) return Math.floor(vw*0.36);
+  return Math.min(260,Math.floor(vw/5.2));
+}
+function mkCard(r){
+  var p=PAL[r.p%PAL.length];
+  var imgUrl=r.img.indexOf('http')===0?r.img:IMG_BASE+r.img;
+  var bg=r.img
+    ?'background-image:url(\''+imgUrl+'\');background-color:#111;'
+    :'background:'+(BG[r.t]||BG['사고차매입'])+';';
+  var bgCls='rv6-bg'+(r.img?' img':'');
+  var el=document.createElement('div');
+  el.className='rv6-card';
+  el.style.width=cardWidth()+'px';
+  el.innerHTML=
+    '<div class="'+bgCls+'" style="'+bg+'"></div>'+
+    '<div class="rv6-grad"></div>'+
+    '<div class="rv6-badges">'+
+      '<span class="rv6-tbadge">'+r.t+'</span>'+
+      (r.dA<=3?'<span class="rv6-nbadge">NEW</span>':'')+
+    '</div>'+
+    '<div class="rv6-body">'+
+      '<div class="rv6-stars">'+starHtml(r.star)+'</div>'+
+      '<div class="rv6-txt">'+r.tx+'</div>'+
+      '<div class="rv6-meta">'+
+        '<div class="rv6-who">'+
+          '<div class="rv6-av" style="background:'+p.bg+'"><span style="color:'+p.c+'">'+r.n.charAt(0)+'</span></div>'+
+          '<div><div class="rv6-nm">'+r.n+'</div><div class="rv6-rg">'+r.r+'</div></div>'+
+        '</div>'+
+        '<div><div class="rv6-veh">'+r.v+'</div><div class="rv6-dt">'+dDate(r.dA)+'</div></div>'+
+      '</div>'+
+    '</div>';
+  return el;
+}
+function buildTrack(){
+  track.innerHTML='';
+  for(var i=N-CLONE;i<N;i++) track.appendChild(mkCard(DATA[i]));
+  for(var j=0;j<N;j++) track.appendChild(mkCard(DATA[j]));
+  for(var k=0;k<CLONE;k++) track.appendChild(mkCard(DATA[k]));
+}
+buildTrack();
+
+function stride(){return cardWidth()+GAP;}
+function idxOffset(logicIdx){return (CLONE+logicIdx)*stride();}
+
+var cur=0, pxNow=0, dragging=false, dxS=0, pxS=0, timer=null;
+function move(px,anim){
+  pxNow=px;
+  track.style.transition=anim?'transform .62s cubic-bezier(.22,.61,.36,1)':'none';
+  track.style.transform='translateX(-'+px+'px)';
+}
+function goTo(idx,anim){
+  cur=((idx%N)+N)%N;
+  move(idxOffset(cur),anim!==false);
+  fill.style.width=(N>1?(cur/(N-1))*100:100)+'%';
+  curEl.textContent=cur+1;
+}
+track.addEventListener('transitionend',function(){
+  var expected=idxOffset(cur);
+  if(Math.abs(pxNow-expected)>1) move(expected,false);
+});
+
+function dStart(x){clearInterval(timer);dragging=true;dxS=x;pxS=pxNow;track.classList.add('grab');track.style.transition='none';}
+function dMove(x){if(!dragging)return;move(pxS-(x-dxS),false);}
+function dEnd(x){
+  if(!dragging)return;dragging=false;track.classList.remove('grab');
+  var dx=x-dxS;
+  if(Math.abs(dx)>44) goTo(dx<0?cur+1:cur-1,true);
+  else goTo(cur,true);
+  resetTimer();
+}
+track.addEventListener('mousedown',function(e){dStart(e.clientX);});
+window.addEventListener('mousemove',function(e){dMove(e.clientX);});
+window.addEventListener('mouseup',function(e){dEnd(e.clientX);});
+track.addEventListener('touchstart',function(e){dStart(e.touches[0].clientX);},{passive:true});
+track.addEventListener('touchmove',function(e){dMove(e.touches[0].clientX);},{passive:true});
+track.addEventListener('touchend',function(e){dEnd(e.changedTouches[0].clientX);},{passive:true});
+
+document.getElementById('rv6Prev').addEventListener('click',function(){clearInterval(timer);goTo(cur-1,true);resetTimer();});
+document.getElementById('rv6Next').addEventListener('click',function(){clearInterval(timer);goTo(cur+1,true);resetTimer();});
+
+function resetTimer(){clearInterval(timer);timer=setInterval(function(){goTo(cur+1,true);},3200);}
+document.addEventListener('visibilitychange',function(){clearInterval(timer);if(!document.hidden)resetTimer();});
+
+var resizeT;
+window.addEventListener('resize',function(){
+  clearTimeout(resizeT);
+  resizeT=setTimeout(function(){buildTrack();goTo(cur,false);},120);
+});
+
+function init(){
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    move(idxOffset(0),false);
+    fill.style.width='0%';curEl.textContent='1';
+    resetTimer();
+  });});
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+else init();
+})();
+</script>
+</section>
