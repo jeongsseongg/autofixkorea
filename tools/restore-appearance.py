@@ -93,7 +93,7 @@ def build(name):
     for tag in list(page.find_all(['html', 'head', 'body'])):
         if tag not in [page.html, page.head, page.body]:
             tag.unwrap()
-    events = externalize_styles(page, name)
+    events = externalize_styles(page, archive_name)
     rewrite_resources(page)
     route = '/' if name == 'home' else '/' + name
     page.head.append(page.new_tag('meta', attrs={'name': 'robots', 'content': 'noindex,nofollow'}))
@@ -108,12 +108,12 @@ def build(name):
     for i, code in enumerate(scripts + [events]):
         if not code.strip():
             continue
-        file = f'{name}-widget-{i}.js'
+        file = f'{archive_name}-widget-{i}.js'
         exposed = re.findall(r'^function\s+(\w+)\s*\(', code, flags=re.MULTILINE)
         code += '\n' + '\n'.join(f'window.{fn} = {fn};' for fn in exposed)
         (RUNTIME / file).write_text(localize(code), encoding='utf-8')
         imports.append(f'await import("/original-runtime/{file}");')
-    entry = f'/original-runtime/{name}-entry.js'
+    entry = f'/original-runtime/{archive_name}-entry.js'
     (OUT / entry.lstrip('/')).write_text('\n'.join(imports), encoding='utf-8')
     page.body.append(page.new_tag('script', type='module', src=entry))
     destination = OUT / ('index.html' if name == 'home' else name + '/index.html')
