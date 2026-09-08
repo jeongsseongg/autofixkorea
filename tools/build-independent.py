@@ -8,7 +8,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tmp/autofix-parser'))
 from bs4 import BeautifulSoup
 
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'standalone'
+OUT=ROOT/'out'
 PAGES=ROOT/'src/pages'
 OUT.mkdir(exist_ok=True)
 for folder in ['services','config','styles']:

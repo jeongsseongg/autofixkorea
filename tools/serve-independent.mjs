@@ -1,2 +1,2 @@
-process.env.PUBLIC_DIR='standalone';
+process.env.PUBLIC_DIR='out';
 await import('./serve.mjs');

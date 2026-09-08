@@ -10,3 +10,4 @@ release/
 standalone/
 *.tar.gz
 source-archive/assets/
+out/
