@@ -7,7 +7,8 @@ function platformFree(text) {
   assert.doesNotMatch(text,/https?:[^\s"'<>)]*(?:imweb\.me|imweb\.co\.kr)/i);
 }
 assert.throws(()=>platformFree('https://cdn.imweb.me/old.js'));
-const root=resolve('standalone');
+const hosting=JSON.parse(await readFile('.openai/hosting.json','utf8'));
+const root=resolve(hosting.static.directory);
 async function walk(dir) {
   const files=[];
   for (const item of await readdir(dir,{withFileTypes:true})) {
