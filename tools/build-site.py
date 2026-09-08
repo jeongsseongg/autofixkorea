@@ -22,6 +22,8 @@ shutil.copytree(ROOT / 'review-images', OUT / 'review-images', dirs_exist_ok=Tru
 shutil.copytree(ROOT / 'src', OUT / 'src', dirs_exist_ok=True)
 
 def soup(name):
+    if name == 'Home':
+        name = 'home'
     return BeautifulSoup((ARCHIVE / (name + '.html')).read_text(encoding='utf-8'), 'html.parser')
 
 def css_rules(text):

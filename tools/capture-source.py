@@ -19,7 +19,7 @@ def capture(item):
         with urllib.request.urlopen(request, timeout=30) as response:
             body = response.read()
             suffix = '.txt' if name in ['sitemap', 'robots', 'rss', 'llms'] else '.html'
-            filename = name + suffix
+            filename = ('home-alias' if name == 'Home' else name) + suffix
             (DEST / filename).write_bytes(body)
             return {'url': url, 'file': filename, 'status': response.status, 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest()}
     except Exception as error:
