@@ -5,3 +5,6 @@ preview.png
 preview-mobile.png
 tmp-process-images/
 buy-review-preview.png
+dist/
+*.tar.gz
+source-archive/assets/
