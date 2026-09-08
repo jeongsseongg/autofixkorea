@@ -1,3 +1,5 @@
 /* Only the platform header positioning previously set by Imweb runtime. */
-#s202509294aa283a90544f{position:sticky;top:0;z-index:1000}
-#s2025092930dcf39490e1b{position:sticky;top:0;z-index:1000}
+#s202509294aa283a90544f{position:fixed;top:0;width:100%;z-index:1000}
+#s2025092930dcf39490e1b{position:fixed;top:0;width:100%;z-index:1000}
+#inline_header_normal{padding-top:73px}
+#inline_header_mobile{padding-top:60px}
