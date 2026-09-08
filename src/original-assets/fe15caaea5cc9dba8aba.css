@@ -1,0 +1,99 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/5d6f4e5aea9160fe298e.eot");
+    src: url("/original-assets/a85ed7d4e9ced88ea543.eot") format('embedded-opentype'),
+    url("/original-assets/de3cc5011c28c480e22d.woff2") format('woff2'),
+    url("/original-assets/7a489e0226e0654f9ef1.woff") format('woff'),
+    url("/original-assets/29b066b89bf4d9f5b482.ttf") format('truetype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/67ca32fea730afb89810.eot");
+    src: url("/original-assets/14a47dc8e3431f506b2b.eot") format('embedded-opentype'),
+    url("/original-assets/4f2b41005d555579fb39.woff2") format('woff2'),
+    url("/original-assets/8a31eb49d588729dd84c.woff") format('woff'),
+    url("/original-assets/47df9160f0a38d89d882.ttf") format('truetype');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/a216f70a5d6de8a898d1.eot");
+    src: url("/original-assets/0236260a1e545d58e8a0.eot") format('embedded-opentype'),
+    url("/original-assets/cb0b46920a31aad53adf.woff2") format('woff2'),
+    url("/original-assets/b2fb33a8261e54096d3f.woff") format('woff'),
+    url("/original-assets/f040744f8a26a9366b08.ttf") format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/2bc51cd957801d4ae7de.eot");
+    src: url("/original-assets/a0441620b5ac5db4edfb.eot") format('embedded-opentype'),
+    url("/original-assets/6d499a983462ca114dd4.woff2") format('woff2'),
+    url("/original-assets/85cf5f59fb2c063bd342.woff") format('woff'),
+    url("/original-assets/311ee640fa985f3d1783.ttf") format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/550aa8808950f19dc828.eot");
+    src: url("/original-assets/b59e4f4b89bfc2f65970.eot") format('embedded-opentype'),
+    url("/original-assets/0aef82678fb4664ffd04.woff2") format('woff2'),
+    url("/original-assets/4ad53eb4dbfb6e5d8d4d.woff") format('woff'),
+    url("/original-assets/b573b23c3e35595a1218.ttf") format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/f34d7cbcddc4dd34caa7.eot");
+    src: url("/original-assets/67354486f032fd53381d.eot") format('embedded-opentype'),
+    url("/original-assets/98d572b4cd837ba214c7.woff2") format('woff2'),
+    url("/original-assets/d4cd2c048256605dd412.woff") format('woff'),
+    url("/original-assets/140e7e63fedc93479cdc.ttf") format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/27735d5b847b49e7e689.eot");
+    src: url("/original-assets/5f54fcd4998227245bc9.eot") format('embedded-opentype'),
+        url("/original-assets/f929fb8709c84ebde955.woff2") format('woff2'),
+        url("/original-assets/5faa170cca0192a93ae0.woff") format('woff'),
+        url("/original-assets/58e8dc3a5624c4bd1b09.ttf") format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/b6454c42fc0aa1138e30.eot");
+    src: url("/original-assets/08818916615afe2f4224.eot") format('embedded-opentype'),
+    url("/original-assets/ec93d6c49c070e11de0e.woff2") format('woff2'),
+    url("/original-assets/b7c0fe7ffc9575f9afd8.woff") format('woff'),
+    url("/original-assets/ffe33594818427906c0b.ttf") format('truetype');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url("/original-assets/00878e7632e00d62f157.eot");
+    src: url("/original-assets/c966990a39b9b6e42f29.eot") format('embedded-opentype'),
+        url("/original-assets/bb8cf96e099572f1009e.woff2") format('woff2'),
+        url("/original-assets/9fe2f04da7291a236c79.woff") format('woff'),
+        url("/original-assets/ef8b3b24d212bbf971c3.ttf") format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}

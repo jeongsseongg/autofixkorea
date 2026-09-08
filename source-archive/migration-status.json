@@ -4,9 +4,9 @@
   "source_repository": "https://github.com/jeongsseongg/autofixkorea",
   "observed_at": "2026-09-08",
   "admin_checked": ["site identity", "SEO verification tags", "robots.txt", "llms.txt", "design menu inventory", "primary domain"],
-  "working_preview": ["main", "process", "six case details", "consultation layout with transmission blocked", "privacy dialog", "phone and Kakao links"],
-  "pending": ["legacy /19 board posts and attachments", "legacy /21 content", "full /pro layout parity", "auction source and Supabase connection audit", "actual consultation delivery and storage", "Firebase role and connection", "GitHub branch publication", "custom-domain DNS and TLS cutover", "production sitemap and indexing re-enable"],
+  "working_preview": ["original full DOM and CSS for nine source routes", "main desktop and mobile section geometry compared with original", "process and review heading geometry compared with original", "original six review cards and popup", "original consultation layout with transmission blocked", "original custom widget animations and sliders", "original footer and fixed consultation bar"],
+  "pending": ["legacy /19 board detail posts and attachments", "auction source and Supabase connection audit", "actual consultation delivery and storage", "Firebase role and connection", "GitHub branch publication", "custom-domain DNS and TLS cutover", "production sitemap and indexing re-enable"],
   "missing_source_asset": "https://images.unsplash.com/photo-1551534831-b2dd5a8c8b4b returned 404",
-  "removed_from_runtime": ["random viewer and inquiry counts", "Imweb SDKs", "legacy client-side dealer authentication", "third-party tracking scripts"],
-  "note": "Raw public pages and asset bundles are retained locally. This preview is not proof of a completed migration or unchanged search indexing."
+  "removed_from_runtime": ["Imweb SDKs", "third-party tracking scripts"],
+  "note": "Original visual widgets, including source counters and legacy client-side auction UI, are preserved for source-faithful private review; their data is not verified as live business data. The original desktop consultation overflow is retained. This preview is not proof of a completed migration or unchanged search indexing."
 }
