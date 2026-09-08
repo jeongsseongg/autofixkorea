@@ -1,0 +1,69 @@
+<div class="_widget_data" data-widget-anim="none" data-widget-anim-delay="0" data-widget-anim-duration="0.7" data-widget-name="코드" data-widget-parent-is-mobile="N" data-widget-type="code"><!DOCTYPE html>
+
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>오토픽스코리아 경매 랜딩 연동</title>
+<section class="ofa">
+<div class="ofa-hd">
+<div class="ofa-hd-left">
+<div class="ofa-live"><span class="ofa-live-dot"></span>실시간 경매 진행중</div>
+<h2 class="ofa-title">오토픽스코리아<br/><em>실시간 매물</em></h2>
+<p class="ofa-subtitle">전국 사고차 실시간 매물 · 투명한 입찰 · 당일 계약</p>
+</div>
+<div class="ofa-hd-right">
+<div class="ofa-stat">
+<div class="ofa-stat-val blue" id="ofaActive">13</div>
+<div class="ofa-stat-lbl">경매중</div>
+</div>
+<div class="ofa-stat">
+<div class="ofa-stat-val sold" id="ofaSold">6</div>
+<div class="ofa-stat-lbl">매각완료</div>
+</div>
+<div class="ofa-stat">
+<div class="ofa-stat-val" id="ofaTotal">19</div>
+<div class="ofa-stat-lbl">전체 매물</div>
+</div>
+<div class="ofa-btn-group">
+<a class="ofa-btn-alliance" data-auction-link="" href="https://autofix-chi.vercel.app/">오토픽스코리아 매물 확인</a>
+<a class="ofa-btn-consult" href="tel:01041027437">입찰 상담 안내</a>
+</div>
+</div>
+</div>
+<div class="ofa-line"></div>
+<div class="ofa-vp" id="ofaVP">
+<div class="ofa-track" id="ofaTrack"></div>
+</div>
+<div class="ofa-footer">
+<div class="ofa-ft-left">
+<span class="ofa-ft-dot"></span>
+    총 <b id="ofaTot">19</b>개 매물 · 실시간 업데이트
+  </div>
+<div class="ofa-ft-right">
+<a class="ofa-ft-link" href="tel:01041027437">📞 010-4102-7437</a>
+<a class="ofa-ft-link" data-auction-link="" href="https://autofix-chi.vercel.app/">전체 매물 보기 →</a>
+</div>
+</div>
+<div class="ofa-auth-backdrop" id="ofaAuthBackdrop">
+<div aria-labelledby="ofaAuthTitle" aria-modal="true" class="ofa-auth-modal" role="dialog">
+<div class="ofa-auth-chip">DEALER LOGIN</div>
+<div class="ofa-auth-title" id="ofaAuthTitle">업체 로그인</div>
+<div class="ofa-auth-sub">로그인 전에는 게시글 내용을 볼 수 없습니다. 제휴 계정으로 인증하면 선택한 경매 페이지로 바로 이동합니다.</div>
+<form action="#" class="ofa-auth-form" id="ofaAuthForm" method="get">
+<div class="ofa-auth-field">
+<label for="ofaDealerId">업체 아이디</label>
+<input autocomplete="username" id="ofaDealerId" placeholder="예: partner01" type="text"/>
+</div>
+<div class="ofa-auth-field">
+<label for="ofaDealerPassword">비밀번호</label>
+<input autocomplete="current-password" id="ofaDealerPassword" placeholder="비밀번호 입력" type="password"/>
+</div>
+<div class="ofa-auth-error" id="ofaAuthError"></div>
+<div class="ofa-auth-actions">
+<button class="ofa-auth-btn secondary" id="ofaAuthCancel" type="button">닫기</button>
+<button class="ofa-auth-btn primary" type="submit">로그인 후 이동</button>
+</div>
+</form>
+</div>
+</div>
+</section>
+</div>

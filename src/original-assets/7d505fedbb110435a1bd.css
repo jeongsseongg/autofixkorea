@@ -9104,7 +9104,7 @@ article.help.top_tail:after {
 	-ms-filter: grayscale(100%);
 	-o-filter: grayscale(100%);
 	filter: grayscale(100%);
-	filter:url("https://vendor-cdn.imweb.me/common/img/filters.svg#grayscale");
+	filter:none;
 	filter: gray;
 	-webkit-filter: grayscale(1);
 }

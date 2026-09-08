@@ -1,0 +1,38 @@
+[
+  {
+    "path": "/",
+    "template": "home.html"
+  },
+  {
+    "path": "/Home",
+    "template": "home.html"
+  },
+  {
+    "path": "/news",
+    "template": "news.html"
+  },
+  {
+    "path": "/review",
+    "template": "review.html"
+  },
+  {
+    "path": "/download",
+    "template": "download.html"
+  },
+  {
+    "path": "/car",
+    "template": "car.html"
+  },
+  {
+    "path": "/19",
+    "template": "19.html"
+  },
+  {
+    "path": "/pro",
+    "template": "pro.html"
+  },
+  {
+    "path": "/21",
+    "template": "21.html"
+  }
+]

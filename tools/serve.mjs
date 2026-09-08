@@ -1,7 +1,7 @@
 import http from 'node:http';
 import {readFile,stat} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
-const root=resolve('dist');
+const root=resolve(process.env.PUBLIC_DIR||'dist');
 const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.jpg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml','.ico':'image/x-icon','.txt':'text/plain; charset=utf-8'};
 http.createServer(async(req,res)=>{
   try{

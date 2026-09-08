@@ -1,0 +1,145 @@
+<div class="_widget_data" data-widget-anim="none" data-widget-anim-delay="0" data-widget-anim-duration="0.7" data-widget-name="코드" data-widget-parent-is-mobile="N" data-widget-type="code"><!DOCTYPE html>
+
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>오토픽스코리아 경매</title>
+<div class="hd">
+<div class="hd-l">
+<div class="hd-mark"><svg fill="none" height="18" viewbox="0 0 24 24" width="18"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg></div>
+<div class="hd-name">오토픽스코리아</div>
+<div class="hd-sub">사고차 보안 경매</div>
+</div>
+<div class="hd-r">
+<div class="hd-auth" id="authStatus">업체 로그인 필요</div>
+<div class="hd-live"><div class="hd-dot"></div>실시간 경매중</div>
+<button class="hd-btn" id="dealerBtn">업체 로그인</button>
+<button class="hd-btn origin-style-268" id="adminBtn">관리자 패널</button>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="auth-backdrop" id="authBackdrop">
+<div class="auth-modal">
+<div class="auth-top">
+<div class="auth-chip" id="authChip">보안 인증</div>
+<button class="auth-close" type="button">×</button>
+<div class="auth-title" id="authTitle">로그인</div>
+<div class="auth-sub" id="authSub">접속 정보를 입력하세요.</div>
+</div>
+<div class="auth-body">
+<form action="#" id="authForm" method="get">
+<div class="auth-fields" id="authFields"></div>
+<div class="auth-error" id="authError"></div>
+<div class="auth-note origin-style-281" id="authNote"></div>
+<div class="auth-actions">
+<button class="auth-ghost" type="button">취소</button>
+<button class="auth-submit" id="authSubmitBtn" type="submit">확인</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<div id="listView">
+<div class="hero">
+<h1>오토픽스코리아 <em>보안 경매</em></h1>
+<p>입찰 금액 외부 비공개 · 고객 직접 입찰 · 관리자 해시 인증</p>
+<div class="stats">
+<div class="stat">경매중 <b id="activeCnt">0</b>개</div><div class="sep"></div>
+<div class="stat">매각완료 <b id="soldCnt">0</b>개</div><div class="sep"></div>
+<div class="stat">전체 <b id="totalCnt">0</b>개</div>
+</div>
+<div class="hero-note"><b>접근 제한:</b> 업체 로그인 전에는 차량 상세 내용과 입찰이 모두 차단됩니다. 금액은 로그인 후에도 본인 권한 또는 관리자 권한에서만 확인됩니다.</div>
+</div>
+<div class="wrap"><div class="grid" id="listGrid"></div></div>
+</div>
+<div id="detailView">
+<div class="detail">
+<div class="back">← 목록으로</div>
+<div class="detail-grid">
+<div>
+<div class="box gallery">
+<div class="gallery-main" id="galleryMain"></div>
+<div class="gallery-thumbs" id="galleryThumbs"></div>
+</div>
+<div class="box mt16">
+<h2>차량 정보</h2>
+<table class="table" id="infoTable"></table>
+</div>
+</div>
+<div class="side">
+<div class="box" id="auctionCard"></div>
+<div class="box">
+<h3>입찰 내역</h3>
+<div class="bid-list" id="bidList"></div>
+<div class="guide">외부 화면에서는 입찰 금액이 숨겨집니다. <b>본인 입찰 때 설정한 확인 암호</b>를 입력하면 해당 금액만 확인할 수 있고, 관리자 인증 시 전체 금액을 볼 수 있습니다.</div>
+<div class="price" id="priceReveal"></div>
+</div>
+<div class="box form" id="bidFormCard"></div>
+<div class="cta">
+<a class="call" href="tel:01041027437">📞 010-4102-7437 전화 상담</a>
+<a class="kakao" href="https://pf.kakao.com/_your_id/chat"><svg fill="none" height="17" viewbox="0 0 18 17" width="18"><path clip-rule="evenodd" d="M9 0C4.03 0 0 3.25 0 7.26c0 2.58 1.63 4.85 4.09 6.18L3.1 17l4.1-2.2c.58.08 1.18.13 1.8.13 4.97 0 9-3.25 9-7.27C18 3.25 13.97 0 9 0z" fill="#1a1a1a" fill-rule="evenodd"></path></svg>카카오 채널 상담</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="adminView">
+<div class="admin">
+<div class="box">
+<h2>관리자 보안</h2>
+<div class="admin-note" id="securityNote">관리자 비밀번호는 파일에 하드코딩하지 않고 브라우저에 해시값으로만 저장됩니다. 다만 이 페이지는 정적 HTML 기반이라 진짜 운영 보안은 서버 인증이 필요합니다.</div>
+<div class="admin-actions">
+<button class="ghost">관리자 비밀번호 변경</button>
+<button class="ghost">관리자 로그아웃</button>
+</div>
+</div>
+<div class="box mt16">
+<h2>매물 등록 <span class="origin-style-338" id="editingId"></span></h2>
+<div class="af-row"><div class="full">
+<div class="label">차량명 *</div><input class="af-input" id="af-title" placeholder="예: 제네시스 G80 전손차량"/>
+</div></div>
+<div class="af-row">
+<div><div class="label">연식</div><input class="af-input" id="af-year" placeholder="2021년"/></div>
+<div><div class="label">주행거리</div><input class="af-input" id="af-km" placeholder="48,200km"/></div>
+</div>
+<div class="af-row">
+<div><div class="label">연료</div><input class="af-input" id="af-fuel" placeholder="가솔린 3.5"/></div>
+<div><div class="label">사고유형 *</div><select class="af-select" id="af-type"><option value="">선택</option><option>전손차량</option><option>음주면책</option><option>침수차량</option><option>보험미가입</option><option>상대방과실</option><option>미수선처리</option><option>무보험사고</option></select></div>
+</div>
+<div class="af-row">
+<div><div class="label">배지 컬러</div><select class="af-select" id="af-badgeColor"><option value="bc-red">빨강</option><option value="bc-blue">파랑</option><option value="bc-orange">주황</option><option value="bc-teal">초록</option><option value="bc-navy">네이비</option></select></div>
+<div><div class="label">지역</div><input class="af-input" id="af-region" placeholder="서울 강남"/></div>
+</div>
+<div class="af-row"><div class="full"><div class="label">차량 설명</div><textarea class="af-txt" id="af-desc" placeholder="차량 상태, 사고 내용, 특이사항 등을 입력하세요."></textarea></div></div>
+<div class="af-row"><div class="full"><div class="label">차량 사진 (최대 5장) — 파일 업로드</div><div class="img-slots" id="imgSlots"></div><div class="meta origin-style-385">사진을 클릭해서 바로 업로드하세요. 브라우저 저장 공간 한계 때문에 업로드 이미지는 자동 압축됩니다.</div></div></div>
+<div class="af-row"><div class="full"><div class="label">입찰 내역 직접 수정</div><div class="bid-entries" id="bidEntries"></div><button class="add">+ 입찰 항목 추가</button></div></div>
+<div class="origin-style-391"><label class="origin-style-392"><input class="origin-style-393" id="af-sold" type="checkbox"/>매각 완료 처리</label></div>
+<div class="origin-style-394">
+<button class="save">매물 저장하기</button>
+<button class="del origin-style-396" id="deleteLotBtn">이 매물 삭제</button>
+<button class="del origin-style-397">초기화</button>
+</div>
+</div>
+<div class="box mt16">
+<h2>업체 계정 관리</h2>
+<div class="admin-note">관리자가 업체용 아이디와 비밀번호를 생성합니다. 비밀번호 원문은 저장되지 않고 해시값만 저장됩니다. 같은 아이디로 다시 저장하면 비밀번호가 갱신됩니다.</div>
+<div class="af-row">
+<div><div class="label">업체 아이디 *</div><input class="af-input" id="dealer-id" placeholder="예: partner01"/></div>
+<div><div class="label">업체명</div><input class="af-input" id="dealer-name" placeholder="예: 강남딜러센터"/></div>
+</div>
+<div class="af-row">
+<div><div class="label">업체 비밀번호 *</div><input class="af-input" id="dealer-password" placeholder="4자 이상" type="password"/></div>
+<div><div class="label">비밀번호 확인 *</div><input class="af-input" id="dealer-password-confirm" placeholder="동일 비밀번호 재입력" type="password"/></div>
+</div>
+<div class="admin-actions">
+<button class="ghost">업체 계정 저장</button>
+<button class="ghost">업체 계정 입력 초기화</button>
+</div>
+<div class="dealer-list origin-style-418" id="dealerList"><div class="empty">생성된 업체 계정이 없습니다.</div></div>
+</div>
+<div class="box mt16">
+<h2>등록 매물 관리</h2>
+<div class="mgmt" id="lotMgmtList"><div class="empty">등록된 매물이 없습니다.</div></div>
+</div>
+</div>
+</div>
+</div>
