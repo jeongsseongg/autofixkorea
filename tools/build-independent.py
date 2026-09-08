@@ -38,7 +38,7 @@ for route in routes:
     page=BeautifulSoup(text,'html.parser')
     for frame in list(page.find_all('iframe')):
         frame.decompose()
-    policy="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://formsubmit.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co"
+    policy="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://ytigiculewerivyytxza.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
     page.head.insert(0,page.new_tag('meta',attrs={'http-equiv':'Content-Security-Policy','content':policy}))
     page.select_one('link[rel=canonical]')['href']='https://www.autofixkorea.com'+route['path']
     path=OUT/('index.html' if route['path']=='/' else route['path'].strip('/')+'/index.html')

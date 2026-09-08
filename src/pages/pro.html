@@ -76,7 +76,7 @@
 <input name="_template" type="hidden" value="table"/>
 <input name="_captcha" type="hidden" value="false"/>
 <input class="fb-car" name="차량명" placeholder="차량명 예)K5" type="text"/>
-<input class="fb-tel" name="연락처" placeholder="연락처*" required="" type="tel"/>
+<input class="fb-tel" name="연락처" placeholder="연락처*" required="" pattern="0[0-9() -]{8,15}" maxlength="16" type="tel"/>
 <input class="fb-rgn" name="지역" placeholder="지역*" required="" type="text"/>
 <div class="afh-agr">
 <input id="afh-agree" name="개인정보동의" required="" type="checkbox"/>

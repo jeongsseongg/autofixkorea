@@ -1,0 +1,1 @@
+-- Reserved draft identifier. Schema lives in CLI-generated 20260908091604_autofix_consultations.sql.

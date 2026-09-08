@@ -1,6 +1,8 @@
+import {publicKey} from './supabase-public.js';
 export const configuration = Object.freeze({
   consultation: {
-    endpoint:'https://formsubmit.co/ajax/jeongsseongg@gmail.com',
+    endpoint:'https://ytigiculewerivyytxza.supabase.co/functions/v1/autofix-consultation',
+    publicKey,
     enabled:true,
   },
   promotors: {
