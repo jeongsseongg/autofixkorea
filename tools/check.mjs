@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile,readdir,access} from 'node:fs/promises';
 import {join} from 'node:path';
 const origin=process.env.PREVIEW_URL||'http://127.0.0.1:4328';
+const publicDir=process.env.PUBLIC_DIR||'dist';
 async function files(dir){
  const result=[];
  for(const entry of await readdir(dir,{withFileTypes:true})){
@@ -23,11 +24,11 @@ for(const path of routes){
 }
 assert.equal((await fetch(origin+'/missing-page-check')).status,404);
 let images=0;
-for(const path of (await files('dist')).filter(x=>x.endsWith('.html'))){
+for(const path of (await files(publicDir)).filter(x=>x.endsWith('.html'))){
  const text=await readFile(path,'utf8');
  for(const match of text.matchAll(/<img[^>]+src="([^"]+)"/g)){
   assert.ok(match[1].startsWith('/'),'External image: '+match[1]);
-  await access(join('dist',match[1]));images++;
+  await access(join(publicDir,match[1]));images++;
  }
 }
 console.log(`PASS: ${routes.length} HTTP routes, genuine 404, single canonical, no inline executable code, ${images} local image references.`);
