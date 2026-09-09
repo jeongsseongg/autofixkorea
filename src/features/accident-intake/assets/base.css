@@ -1,0 +1,9 @@
+@font-face{font-family:Pretendard;src:url("./PretendardVariable.woff2") format("woff2");font-weight:45 920;font-display:swap}
+:root{font-family:Pretendard,-apple-system,BlinkMacSystemFont,sans-serif;line-height:1.6;color:#10223b;background:#f5f7fb;--ink:#0c203b;--accent:#175994;--line:#dfe5ed;--muted:#65758a}
+*{box-sizing:border-box}body{margin:0;font-size:16px;letter-spacing:-.025em}button,input,textarea{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #3984c8;outline-offset:3px}h2:focus{outline:none}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.site-header{background:#0a1d35;color:#fff}.header-inner{max-width:1180px;min-height:88px;margin:auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.standalone-brand{font-weight:800;letter-spacing:.12em;font-size:20px}.standalone-brand span{display:block;font-size:11px;letter-spacing:.08em;color:#b9c7d9;margin-top:2px}.header-contact{color:#b9c7d9;font-size:13px}
+.eyebrow{font-size:13px;font-weight:650;color:var(--accent);margin:0 0 12px;letter-spacing:.02em}[hidden]{display:none}
+@media(max-width:700px){.header-inner{min-height:72px;padding:14px 22px}.standalone-brand{font-size:17px}.header-contact{display:none}}

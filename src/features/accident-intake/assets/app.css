@@ -1,0 +1,53 @@
+/* Compact consultation app shell. */
+body{background:#edf1f4}.site-header{background:#fff;border:0}.header-inner{max-width:600px;padding:18px 24px}.standalone-brand{font-size:17px}.standalone-brand span{font-size:10px}.header-contact{font-size:10px}
+.purchase-layout{display:flex;flex-direction:column;gap:0;width:100%;max-width:600px;margin:0 auto 32px;padding:0;background:#fff;min-height:calc(100dvh - 90px)}
+.purchase-intro{order:1;min-height:0;width:auto;margin:0 24px 24px;padding:0;border-radius:16px;overflow:hidden}.app-intro-copy{padding:24px 24px 16px}.purchase-intro .eyebrow{margin:0;font-size:11px}.purchase-intro h1{font-size:25px;line-height:1.45;margin:10px 0 12px}.purchase-intro h1 br{display:block}.app-intro-copy>p:last-child{font-size:13px;line-height:1.7;color:#c3d1db;margin:0}.consultation-image{display:block;width:100%;height:150px;object-fit:cover;object-position:center 55%}.intro-more{padding:15px 24px}.intro-more summary{font-size:12px;color:#d5e0e7;cursor:pointer;list-style:none;display:flex;justify-content:space-between;min-height:24px;align-items:center}.intro-more p{font-size:13px;color:#c3d1db;line-height:1.8}
+.purchase-surface{display:contents}.purchase-progress{order:0;position:sticky;top:0;z-index:10;background:#fff;margin:0;padding:18px 24px 14px;border-bottom:1px solid #edf0f3}.purchase-progress ol{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0;margin:0;list-style:none}.purchase-progress li{border-top:3px solid #e6ebef;padding-top:9px;font-size:12px;text-align:center;color:#8a96a0;white-space:nowrap}.purchase-progress li[aria-current=step]{border-color:#0b2738;color:#0b2738;font-weight:700}.purchase-progress li.is-complete{border-color:#99b2bf;color:#607b89}.purchase-progress [data-draft-status]{font-size:10px;color:#768b85;text-align:right;margin:10px 0 0}
+#purchase-form,.purchase-review{order:2;margin:0;padding:24px;width:100%}.question-heading>.eyebrow{font-size:11px;margin-top:0}.question-heading h2{font-size:25px;line-height:1.4;margin-top:10px;letter-spacing:-.035em}.question-heading>p:last-child{font-size:13px;line-height:1.75}.accident-choices{gap:10px}.accident-option{padding:18px;border-radius:12px}.accident-option strong{font-size:16px}.accident-option small{font-size:12px}.purchase-actions{position:sticky;bottom:0;z-index:5;background:#fff;padding:16px 0 max(12px,env(safe-area-inset-bottom));margin-top:28px;border-top:1px solid #eef1f4}.next-button{flex:1;min-height:52px}.input-assistance{order:3;margin:8px 24px 0;padding:20px 0}.input-assistance nav{gap:24px}.preview-note{order:4;margin:0;padding:8px 24px 24px}.answer-control input{font-size:20px}.purchase-review h2{font-size:25px}.purchase-intro[hidden],.purchase-review[hidden],#purchase-form[hidden]{display:none}
+@media(min-width:701px){.site-header{max-width:600px;margin:auto}.purchase-layout{border-radius:0 0 20px 20px}.consultation-image{height:175px}}
+@media(max-width:380px){.header-inner{padding:16px}.header-contact{display:none}.purchase-progress{padding-inline:16px}.purchase-intro{margin-inline:16px}#purchase-form,.purchase-review{padding:20px 16px}.purchase-progress li{font-size:11px}.purchase-actions{gap:8px}.skip-button{font-size:11px}}
+.purchase-layout{align-items:stretch}.purchase-intro{align-self:stretch}.purchase-progress{display:block}.site-header{color:#0b2738}.header-contact,.standalone-brand span{color:#708293}
+/* Shared alignment for header, introduction and consultation. */
+.site-header{max-width:none;background:#fff;border-bottom:1px solid #e1e7eb}.header-inner{max-width:1100px;min-height:82px;padding:16px 28px}.standalone-brand{display:flex;align-items:center;gap:12px}.standalone-brand img{width:42px;height:42px;object-fit:contain}.standalone-brand .brand-wordmark{font-size:16px;color:#0b2738;margin:0;letter-spacing:.08em}.brand-wordmark small{display:block;color:#6c7c88;font-size:11px;font-weight:500;letter-spacing:.02em;margin-top:2px}.header-contact{font-size:12px}
+.purchase-layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:28px;max-width:1100px;min-height:0;padding:0 28px;margin:32px auto 48px;background:transparent;align-items:stretch}.purchase-intro{order:0;margin:0;align-self:stretch;border-radius:14px;min-height:540px;display:flex;flex-direction:column}.app-intro-copy{padding:36px 28px 20px}.purchase-intro h1{font-size:30px;margin:24px 0;line-height:1.5}.app-intro-copy>p:last-child{font-size:15px;line-height:1.85}.intro-more{margin-top:auto;padding:24px 28px;border-top:1px solid #38515f}.intro-more summary{font-size:13px;gap:12px}.purchase-surface{display:block;order:1;width:100%;align-self:stretch;background:#fff;border:1px solid #e0e6eb;border-radius:14px;padding:0;overflow:clip}.purchase-progress{position:relative;padding:26px 28px 18px;border-bottom:1px solid #e6ebef}.purchase-progress li{font-size:13px;text-align:left;padding-top:12px}.purchase-progress [data-draft-status]{margin-top:12px}.purchase-progress ol{gap:12px}#purchase-form,.purchase-review{padding:30px 28px 10px}.input-assistance{margin:12px 28px 0;padding:22px 0}.preview-note{padding:6px 28px 22px}.question-heading h2{font-size:27px}.purchase-actions{margin-top:32px}.input-assistance nav{width:auto}
+@media(max-width:760px){body{background:#fff}.header-inner{min-height:72px;padding:14px 22px}.header-contact{display:none}.purchase-layout{display:flex;max-width:600px;gap:0;margin:0 auto;padding:0;background:#fff}.purchase-intro{min-height:0;margin:20px 22px 0;order:0;border-radius:12px}.app-intro-copy{padding:24px}.purchase-intro h1{font-size:25px;margin:12px 0 16px}.app-intro-copy>p:last-child{font-size:13px}.intro-more{padding:12px 24px}.purchase-surface{border:0;border-radius:0;overflow:visible}.purchase-progress{position:sticky;top:0;padding:22px 22px 14px;background:#fff}.purchase-progress li{font-size:12px;text-align:center}.purchase-progress ol{gap:8px}#purchase-form,.purchase-review{padding:26px 22px 8px}.question-heading h2{font-size:25px}.input-assistance{margin-inline:22px}.preview-note{padding-inline:22px}.is-answering .purchase-intro{display:none}.input-assistance nav{width:100%}}
+.purchase-intro h1{word-break:keep-all}.purchase-actions[hidden]{display:none}@media(max-width:760px){.purchase-intro h1 br:first-of-type{display:none}}
+
+/* Consultation copy: clear promise followed by practical encouragement. */
+.app-intro-copy .brand-promise{font-size:18px;line-height:1.6;color:#edf3f6;font-weight:600;margin:0 0 22px;word-break:keep-all}
+.app-intro-copy .brand-network,.app-intro-copy .brand-guidance{font-size:14px;line-height:1.85;color:#bdceda;margin:0 0 18px;word-break:keep-all}
+.app-intro-copy .brand-network strong{color:#f1f5f7;font-weight:600}
+.intro-encouragement{margin-top:auto;padding:26px 28px;border-top:1px solid #38515f}
+.intro-encouragement h2{color:#cbb48d;font-size:16px;line-height:1.65;font-weight:550;margin:0 0 14px;word-break:keep-all}
+.intro-encouragement p{color:#bdceda;font-size:13px;line-height:1.85;margin:0 0 14px;word-break:keep-all}.intro-encouragement p:last-child{margin-bottom:0}
+@media(max-width:760px){.app-intro-copy{padding:24px 24px 4px}.app-intro-copy .brand-promise{font-size:16px;margin-bottom:16px}.app-intro-copy .brand-network,.app-intro-copy .brand-guidance{font-size:13px;margin-bottom:14px}.intro-encouragement{padding:20px 24px}.intro-encouragement h2{font-size:15px}.intro-encouragement p{font-size:12px}.purchase-intro h1 br:first-of-type{display:block}}
+/* Stable outer panels; only their content scrolls between questions. */
+.purchase-layout{--consultation-panel-height:660px}
+.purchase-intro,.purchase-surface{height:var(--consultation-panel-height);min-height:0;min-width:0;box-sizing:border-box}
+.purchase-surface{display:flex;flex-direction:column;overflow:hidden}
+.purchase-progress,.input-assistance,.preview-note{flex:0 0 auto}
+#purchase-form,.purchase-review{flex:1 1 0;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;overscroll-behavior:contain}
+.purchase-progress{position:static}
+.purchase-intro{overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;overscroll-behavior:contain}
+.purchase-intro .app-intro-copy{flex:1 0 auto;overflow:visible;scrollbar-gutter:auto}
+.purchase-intro .intro-more{flex:0 0 auto;margin-top:0;overflow:visible;scrollbar-gutter:auto}
+.purchase-intro .intro-more summary{position:static;background:#0b2738;min-height:32px;font-size:calc(13px + 2pt);font-weight:700}
+.purchase-intro .intro-more[open] summary span{transform:rotate(45deg)}
+.input-assistance{margin-top:0}
+@media(max-width:760px){
+ .purchase-layout{--consultation-panel-height:650px}
+ .purchase-intro{height:520px;flex:0 0 520px}
+ .purchase-surface{height:var(--consultation-panel-height);flex:0 0 var(--consultation-panel-height)}
+
+ .is-answering .purchase-intro{display:flex}
+}
+
+/* Tighter rhythm without changing panel size between answers. */
+.purchase-layout{margin-top:24px;margin-bottom:32px}
+.app-intro-copy{padding:28px 28px 16px}.purchase-intro h1{margin:18px 0 22px}
+.app-intro-copy .brand-promise{margin-bottom:18px}.app-intro-copy .brand-network,.app-intro-copy .brand-guidance{margin-bottom:16px}
+.purchase-progress{padding:22px 28px 14px}#purchase-form,.purchase-review{padding-top:24px}
+.question-heading>p:last-child{margin-bottom:22px}.purchase-actions{margin-top:22px;padding-top:14px}
+.input-assistance{padding:16px 0}.preview-note{padding-bottom:16px}
+.purchase-intro .intro-more{padding:18px 28px}.intro-more p{margin:14px 0 0;line-height:1.8;word-break:keep-all}.intro-more p strong{color:#d4bd95;font-weight:550}
+@media(max-width:760px){.purchase-layout{margin-top:0;margin-bottom:20px}.purchase-intro{height:470px;flex-basis:470px}.app-intro-copy{padding:22px 24px 12px}.purchase-intro h1{margin:12px 0 18px}.purchase-progress{padding:20px 22px 12px}.purchase-intro .intro-more{padding:16px 24px}}

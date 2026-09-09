@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+ <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>오토픽스코리아 | 차량 판매·수리 상담</title>
+ <meta name="description" content="사고차 판매, 고장차 판매, 사고차 수리를 위한 오토픽스코리아 상담폼">
+ <link rel="stylesheet" href="./assets/base.css"><link rel="stylesheet" href="./assets/form.css">
+ <link rel="stylesheet" href="./assets/app.css">
+ <meta name="robots" content="noindex,nofollow"><link rel="canonical" href="https://www.autofixkorea.com/consultation/"><meta name="theme-color" content="#0b2738">
+ <link rel="stylesheet" href="./assets/reason-dialog.css"><link rel="stylesheet" href="./assets/intake-contact.css">
+</head>
+<body>
+ <header class="site-header"><div class="header-inner"><a class="standalone-brand" href="./index.html"><span class="brand-wordmark">AUTOFIX KOREA<small>오토픽스코리아</small></span></a><span class="header-contact">사고차 매입 · 수리 · 판매</span></div></header>
+ <main class="purchase-layout">
+  <aside class="purchase-intro">
+   <div class="app-intro-copy">
+    <p class="eyebrow">차량 판매·수리 상담</p>
+    <h1>내 차의 다음,<br><span>함께 찾아볼게요.</span></h1>
+    <p class="brand-promise">내 차에 맞는 좋은 조건,<br>더 넓게 찾아드립니다.</p>
+    <p class="brand-network">오토픽스코리아는 국내외 <strong>1,000곳 이상의 바이어·제휴처</strong>와 연결되어 있습니다.</p>
+    <p class="brand-guidance">판매를 원하시면 국내 매입부터 해외 수출까지 조건을 비교하고, 수리가 필요하시면 손상 부위에 맞는 방법을 함께 살펴봅니다.</p>
+   </div>
+   <div class="intro-more"><button type="button" class="reason-trigger" data-reason-open aria-haspopup="dialog" aria-controls="reason-dialog">자세히 알려주실수록 좋은 이유 <span aria-hidden="true">＋</span></button></div>
+  </aside>
+  <div class="purchase-surface">
+   <nav class="purchase-progress" aria-label="상담 진행 절차"><ol><li data-stage>상담 선택</li><li data-stage>차량·상태</li><li data-stage>사진·견적</li><li data-stage>내용 확인</li></ol><p data-draft-status role="status">작성 내용을 불러오고 있어요…</p></nav>
+   <form id="purchase-form" novalidate>
+    <div class="question-heading"><p class="eyebrow">오토픽스코리아가 여쭤볼게요</p><h2 data-question-title tabindex="-1"></h2><p data-question-help></p></div>
+    <div data-question-field></div><div data-photo-area hidden></div><div data-airbag-area hidden></div><div data-finance-area hidden></div>
+    <p class="form-error" data-form-error role="alert"></p>
+    <footer class="purchase-actions"><button class="back-button" type="button" data-prev>← 이전</button><button class="skip-button" type="button" data-skip hidden>아직 모르겠어요</button><button class="next-button" type="button" data-next>다음 →</button></footer>
+   </form>
+   <section class="purchase-review" data-review hidden aria-labelledby="review-title"><p class="eyebrow">답변 확인</p><h2 id="review-title" tabindex="-1">상담 내용을 확인해주세요.</h2><p>아래 내용과 사진을 확인해주세요. 입력하신 내용 그대로 상담서에 담았습니다.</p><div class="consultation-summary" data-review-details></div><div class="photo-grid" data-review-photos></div><label class="intake-consent"><input type="checkbox" data-intake-consent> 상담 접수와 연락을 위한 차량 정보·연락처·사진 수집 및 이용에 동의합니다.</label><div class="review-actions"><button class="back-button" type="button" data-edit>답변 수정</button><button class="back-button" type="button" data-copy>내용 복사</button><button class="back-button" type="button" data-save>상담 신청하기</button></div><p data-save-status role="status"></p></section>
+   <section class="input-assistance" aria-label="입력 도움 및 상담 연락처">
+    <div><h3>입력이 어려우신가요?</h3><p>전화나 카카오톡으로 편하게 말씀해주세요.</p></div>
+    <nav aria-label="다른 방법으로 상담하기">
+     <a href="tel:01041027437" aria-label="010-4102-7437 전화로 상담하기">전화로 상담하기 <span aria-hidden="true">↗</span></a>
+     <a href="https://open.kakao.com/o/sYxxiBph" target="_blank" rel="noopener noreferrer" aria-label="카카오톡 상담 새 창으로 열기">카카오톡 <span aria-hidden="true">↗</span></a>
+    </nav>
+   </section>
+   <p class="preview-note">작성 내용과 사진은 이 브라우저에 자동 저장됩니다.</p>
+  </div>
+ </main>
+ <dialog id="reason-dialog" class="reason-dialog" aria-labelledby="reason-title"><header><h2 id="reason-title">자세히 알려주실수록 좋은 이유</h2><button type="button" data-reason-close aria-label="안내 닫기">×</button></header><div class="reason-body" tabindex="0">
+    <p><strong>내 차의 가치는 충분히, 불필요한 감가는 최소한으로.</strong></p>
+    <p>옵션과 현재 상태, 손상 부위를 자세히 알려주시면 차량의 가치를 바이어에게 더 충분히 전달하고, 실제 상태에 가까운 조건을 비교하는 데 도움이 됩니다.</p>
+    <p>오토픽스코리아는 차량 이동 전 사진과 확인된 내용을 꼼꼼히 살피고, 이동 후에도 같은 내용을 기준으로 상태를 확인해 불필요한 감가와 예상하지 못한 금액 차이를 줄이는 데 신경 씁니다.</p>
+    <p>추가 확인이 필요한 부분은 그 이유와 함께 안내해드리겠습니다. 알고 계신 내용부터 편하게 남겨주세요.</p>
+   </div></dialog>
+ <script type="module" src="./src/accident-purchase.js"></script>
+<footer class="intake-footer"><a href="tel:01041027437">전화 상담 010-4102-7437</a></footer></body></html>
