@@ -12,6 +12,7 @@ export function consultationText(v){
   '**차량 년식 :** '+text(v.year)+'년식',
   '**주행 거리 :** '+(v.mileage?Number(v.mileage).toLocaleString('ko-KR')+' km':'확인 필요'),
   '**차고지 :** '+text(v.region),
+  '**상담 연락처 :** '+text(v.contact),
   '**유류타입 :** '+text(v.fuel),
   (sale?'**희망가 :** '+amount(v.desired)+(v.otherQuote?' ('+text(v.quoteSource)+' 견적 '+amount(v.otherQuote)+')':''):'**수리 희망 예산 :** '+amount(v.budget)),
  ];
