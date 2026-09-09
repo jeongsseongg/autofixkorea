@@ -1,5 +1,6 @@
 import {validate,imageMatches} from './validation.js';
 import {notifyReceipt} from './telegram.ts';
+declare const EdgeRuntime:{waitUntil(task:Promise<unknown>):void};
 const base=Deno.env.get('SUPABASE_URL')||'',service=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||'';
 const bucket='autofix-accident-photos';
 const origins=new Set(['https://autofixkorea.pages.dev','https://autofix-independent.soun7701.chatgpt.site','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328','http://localhost:4328']);
@@ -25,7 +26,7 @@ async function start(input:any,ip:string){
 async function complete(input:any){
  const rows=await request('/rest/v1/autofix_accident_intakes?id=eq.'+input.id+'&select=*');
  const row=rows[0];if(!row||row.token_hash!==await hash(input.token))throw new Error('NOT_AUTHORIZED');
- if(row.status==='complete')return {id:row.id,success:true,notification:await notifySafely(row.id)};
+ if(row.status==='complete')return {id:row.id,success:true,notification:queueNotification(row.id)};
  for(const p of row.photos){
   const r=await fetch(base+'/storage/v1/object/authenticated/'+bucket+'/'+p.path,{headers:{...auth,Range:'bytes=0-11'},signal:AbortSignal.timeout(15000)});
   if(!r.ok)throw new Error('PHOTOS_INCOMPLETE');
@@ -34,7 +35,10 @@ async function complete(input:any){
   if(size!==p.size||!first.value||!imageMatches(first.value,p.mime))throw new Error('INVALID_IMAGE');
  }
  await request('/rest/v1/autofix_accident_intakes?id=eq.'+input.id,'PATCH',{status:'complete',completed_at:new Date().toISOString()});
- return {id:row.id,success:true,notification:await notifySafely(row.id)};
+ return {id:row.id,success:true,notification:queueNotification(row.id)};
+}
+function queueNotification(id:string){
+ EdgeRuntime.waitUntil(notifySafely(id));return 'processing';
 }
 async function notifySafely(id:string){
  try{return await notifyReceipt(id,request);}
