@@ -1,7 +1,7 @@
 import {normalizeSubmission,telegramText} from './validation.mjs';
 
 const env=(name:string)=>Deno.env.get(name)||'';
-const origins=new Set(['https://autofix-independent.soun7701.chatgpt.site','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328']);
+const origins=new Set(['https://autofix-independent.soun7701.chatgpt.site','https://autofixkorea.pages.dev','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328']);
 const service=env('SUPABASE_SERVICE_ROLE_KEY');
 async function rest(path:string,body?:unknown,method='POST') {
   const response=await fetch(`${env('SUPABASE_URL')}/rest/v1/${path}`,{
@@ -22,25 +22,9 @@ async function hash(text:string) {
   return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 async function deliver(id:string|null) {
-  if(!env('AUTOFIX_TELEGRAM_BOT_TOKEN')||!env('AUTOFIX_TELEGRAM_CHAT_ID'))return 'pending';
-  const rows=await rest('rpc/autofix_claim',{p_id:id});
-  let status='pending';
-  for(const row of rows) {
-    try {
-      const response=await fetch(`https://api.telegram.org/bot${env('AUTOFIX_TELEGRAM_BOT_TOKEN')}/sendMessage`,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({chat_id:env('AUTOFIX_TELEGRAM_CHAT_ID'),text:telegramText(row)}),signal:AbortSignal.timeout(10000),
-      });
-      const result=await response.json();
-      if(!response.ok||!result.ok)throw new Error('TELEGRAM_REJECTED');
-      await rest(`autofix_consultations?id=eq.${row.id}`,{telegram_status:'sent',telegram_message_id:String(result.result.message_id),lease_until:null,last_error_code:null},'PATCH');
-      status='sent';
-    } catch {
-      await rest(`autofix_consultations?id=eq.${row.id}`,{telegram_status:'failed',lease_until:null,last_error_code:'TELEGRAM_DELIVERY_FAILED',next_attempt_at:new Date(Date.now()+Math.min(3600000,60000*2**row.attempts)).toISOString()},'PATCH');
-      console.error(JSON.stringify({requestId:row.id,code:'TELEGRAM_DELIVERY_FAILED'}));
-    }
-  }
-  return status;
+  // Storage-only release. No messages leave Supabase until a recipient is approved.
+  // Keep the gateway JWT requirement and service-only retry authorization unchanged.
+  return 'not_configured';
 }
 Deno.serve(async(req:Request)=>{
   const requestId=crypto.randomUUID();

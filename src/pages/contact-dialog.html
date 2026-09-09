@@ -1,0 +1,24 @@
+<dialog class="af-contact-dialog" id="autofixContact" aria-labelledby="autofixContactTitle">
+  <div class="af-contact-heading">
+    <div><p>AUTOFIX KOREA</p><h2 id="autofixContactTitle">차량 상담 신청</h2></div>
+    <button type="button" data-contact-close aria-label="상담폼 닫기">×</button>
+  </div>
+  <p class="af-contact-intro">차량 정보와 연락처를 남겨주시면 확인 후 연락드리겠습니다.</p>
+  <form class="autofix-consultation-form" method="post" action="#">
+    <div class="af-contact-fields">
+      <label>문의 유형<select name="문의유형" required><option value="">선택해 주세요</option><option>사고차판매</option><option>사고차수리</option><option>사고차구입</option><option>기타 상담</option></select></label>
+      <label>차량명<input name="차량명" placeholder="예: 제네시스 G80" required maxlength="120"></label>
+      <label>사고 유형<select name="사고유형" required><option value="">선택해 주세요</option><option>단순 사고</option><option>전손/반파</option><option>침수차</option><option>화재차</option><option>엔진/미션 고장</option><option>수리비 과다</option><option>무보험/자차미가입</option><option>기타</option></select></label>
+      <label>연락처<input name="연락처" type="tel" autocomplete="tel" inputmode="tel" placeholder="연락받으실 번호" required pattern="0[0-9() -]{8,15}" maxlength="16"></label>
+      <label>지역<input name="지역" placeholder="예: 경기 안산시" required maxlength="120"></label>
+      <label>희망금액<input name="희망금액" placeholder="선택 입력" maxlength="120"></label>
+      <label class="af-contact-wide">문의 내용<textarea name="특이사항" rows="3" maxlength="1200" placeholder="차량 상태나 궁금한 점을 알려주세요"></textarea></label>
+    </div>
+    <label class="af-contact-consent"><input name="개인정보수집동의" type="checkbox" value="동의" required> 상담 접수 및 연락을 위한 개인정보 수집·이용에 동의합니다.</label>
+    <button class="af-contact-submit" type="submit">상담 신청하기</button>
+  </form>
+  <div class="af-contact-alternatives">
+    <a data-contact-direct href="https://open.kakao.com/o/sYxxiBph" target="_blank" rel="noopener noreferrer">카카오톡 오픈채팅</a>
+    <a data-contact-direct href="tel:01041027437">전화 상담</a>
+  </div>
+</dialog>

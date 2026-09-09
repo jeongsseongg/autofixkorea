@@ -1,5 +1,5 @@
 export function mount({service}) {
-  const selectors='.afh-pf,#afxReserveForm,.afh-fbar,#promotorsForm';
+  const selectors='.afh-pf,#afxReserveForm,.afh-fbar,#promotorsForm,.autofix-consultation-form';
   const pending=new WeakSet();
   const ids=new WeakMap();
   document.addEventListener('submit',async (event)=>{
@@ -19,7 +19,7 @@ export function mount({service}) {
       const previous=ids.get(form);
       const requestId=previous?.fingerprint===fingerprint?previous.id:crypto.randomUUID();
       ids.set(form,{fingerprint,id:requestId});
-      const formType=form.id==='promotorsForm'?'promotors':form.id==='afxReserveForm'?'consultation':form.matches('.afh-pf')?'hero':'quick';
+      const formType=form.id==='promotorsForm'?'promotors':form.matches('#afxReserveForm,.autofix-consultation-form')?'consultation':form.matches('.afh-pf')?'hero':'quick';
       const result=await service.submit({requestId,formType,page:location.pathname,fields});
       form.reset();
       ids.delete(form);

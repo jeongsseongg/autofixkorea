@@ -5,6 +5,11 @@
   "scripts": {
     "build": "python tools/build-independent.py",
     "dev": "node tools/serve-independent.mjs",
-    "check": "node tools/check.mjs"
+    "check": "node tools/check.mjs",
+    "deploy": "wrangler pages deploy out --project-name autofixkorea --branch main",
+    "preview": "node tools/serve-independent.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.130.0"
   }
 }

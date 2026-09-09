@@ -23,6 +23,6 @@ export function mount() {
     document.querySelector('#promotorsForm')?.requestSubmit();
   }));
   document.querySelectorAll('.cta-secondary,.bb-tel,.phone-btn').forEach(button=>button.addEventListener('click',()=>{
-    window.location.assign('tel:0318319738');
+    window.location.assign('tel:01041027437');
   }));
 }

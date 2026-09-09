@@ -11,3 +11,12 @@ standalone/
 *.tar.gz
 source-archive/assets/
 out/
+node_modules/
+supabase/.temp/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
