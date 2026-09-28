@@ -1,5 +1,7 @@
 name: AutoFix Firebase Hosting
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
   workflow_dispatch:
@@ -11,7 +13,6 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
-    if: vars.AUTOFIX_FIREBASE_CI_ENABLED == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +27,9 @@ jobs:
       - run: npm ci
       - run: npm run build:production && npm run check:independent
       - uses: google-github-actions/auth@v3
+        if: github.ref == 'refs/heads/main' && vars.AUTOFIX_FIREBASE_CI_ENABLED == 'true'
         with:
           workload_identity_provider: projects/274198484245/locations/global/workloadIdentityPools/autofix-github/providers/github
           service_account: autofix-hosting-deploy@promotors-8ddec.iam.gserviceaccount.com
       - run: npx --yes firebase-tools@14.17.0 deploy --only hosting:autofixkorea --project promotors-8ddec --non-interactive
+        if: github.ref == 'refs/heads/main' && vars.AUTOFIX_FIREBASE_CI_ENABLED == 'true'
