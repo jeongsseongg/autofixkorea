@@ -13,6 +13,7 @@ const pages = {
   review:['purchase-reviews'],
   pro:['promotors'],
   car:['auction-link'],
+  listings:['listings'],
   '19':['board'],
 };
 for (const feature of [...shared,...(pages[document.body.dataset.page] || [])]) {

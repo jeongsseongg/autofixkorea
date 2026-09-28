@@ -17,7 +17,7 @@ for folder in ['services','config','styles']:
     shutil.copytree(ROOT/'src'/folder,OUT/'src'/folder,dirs_exist_ok=True)
 (OUT/'src/app').mkdir(parents=True,exist_ok=True)
 shutil.copy2(ROOT/'src/app/independent.js',OUT/'src/app/independent.js')
-features=['site-shell','consultation-form','contact-dialog','consultation-bar','chat-demo','auction-preview','review-slider','blog-feed','service-cards','policies','purchase-process','purchase-reviews','promotors','auction-link','board']
+features=['site-shell','consultation-form','contact-dialog','consultation-bar','chat-demo','auction-preview','review-slider','blog-feed','service-cards','policies','purchase-process','purchase-reviews','promotors','auction-link','board','listings']
 for feature in features:
     shutil.copytree(ROOT/'src/features'/feature,OUT/'src/features'/feature,dirs_exist_ok=True)
 for folder in ['assets','original-assets']:
@@ -39,14 +39,14 @@ for route in routes:
     text=re.sub(r'\{\{include:([^}]+)\}\}',include,(PAGES/route['template']).read_text(encoding='utf-8'))
     page=BeautifulSoup(text,'html.parser')
     for meta in page.select('meta[name="robots"]'):
-        meta['content']=ROBOTS
+        meta['content']='noindex,nofollow' if route['path']=='/listings/' else ROBOTS
     for link in page.select('a[data-contact-open], a[href="#autofixContact"]'):
         link['href']='/consultation/'
     page.head.append(page.new_tag('link',rel='stylesheet',href='/src/styles/contact-dialog.css'))
     page.body.append(BeautifulSoup('<footer class="af-contact-footer"><a data-contact-direct href="tel:01041027437">전화 상담 010-4102-7437</a></footer>','html.parser'))
     for frame in list(page.find_all('iframe')):
         frame.decompose()
-    policy="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://ytigiculewerivyytxza.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    policy="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ytigiculewerivyytxza.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
     page.head.insert(0,page.new_tag('meta',attrs={'http-equiv':'Content-Security-Policy','content':policy}))
     page.select_one('link[rel=canonical]')['href']='https://www.autofixkorea.com'+route['path']
     path=OUT/('index.html' if route['path']=='/' else route['path'].strip('/')+'/index.html')
@@ -68,7 +68,7 @@ robots='User-agent: *\nAllow: /\nSitemap: https://www.autofixkorea.com/sitemap.x
 headers='/*\n  X-Content-Type-Options: nosniff\n'
 headers+=('https://:project.pages.dev/*\n  X-Robots-Tag: noindex\nhttps://:version.:project.pages.dev/*\n  X-Robots-Tag: noindex\n' if PRODUCTION else '  X-Robots-Tag: noindex, nofollow\n')
 (OUT/'_headers').write_text(headers,encoding='utf-8')
-urls=[route['path'] for route in routes]+[f'/review/case-{i+1}' for i in range(len(reviews))]
+urls=[route['path'] for route in routes if route['path']!='/listings/']+[f'/review/case-{i+1}' for i in range(len(reviews))]
 sitemap='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
 sitemap+=''.join('<url><loc>https://www.autofixkorea.com'+url+'</loc></url>' for url in urls if PRODUCTION)
 (OUT/'sitemap.xml').write_text(sitemap+'</urlset>',encoding='utf-8')

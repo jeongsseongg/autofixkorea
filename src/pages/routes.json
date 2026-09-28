@@ -1,4 +1,5 @@
 [
+  {"path":"/listings/","template":"listings.html"},
   {
     "path": "/",
     "template": "home.html"
