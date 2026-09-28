@@ -1,7 +1,7 @@
 import {normalizeSubmission,telegramText} from './validation.mjs';
 
 const env=(name:string)=>Deno.env.get(name)||'';
-const origins=new Set(['https://autofix-independent.soun7701.chatgpt.site','https://autofixkorea.pages.dev','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328']);
+const origins=new Set(['https://autofixkorea.web.app','https://autofixkorea.firebaseapp.com','https://autofix-independent.soun7701.chatgpt.site','https://autofixkorea.pages.dev','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328']);
 const service=env('SUPABASE_SERVICE_ROLE_KEY');
 async function rest(path:string,body?:unknown,method='POST') {
   const response=await fetch(`${env('SUPABASE_URL')}/rest/v1/${path}`,{
