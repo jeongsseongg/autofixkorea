@@ -1,0 +1,93 @@
+[
+  {
+    "url": "https://www.autofixkorea.com/",
+    "file": "home.html",
+    "status": 200,
+    "bytes": 397505,
+    "sha256": "bc1f6e9bff4d7e484a611ebdffe5ae55ca2ff614057520cd99839133c101ffc1"
+  },
+  {
+    "url": "https://www.autofixkorea.com/Home",
+    "file": "Home.html",
+    "status": 200,
+    "bytes": 397527,
+    "sha256": "da79ad418bc9d26e9e3e728a266b3e3d6bb5e3105aa70c1bb79d34f087aed4d3"
+  },
+  {
+    "url": "https://www.autofixkorea.com/news",
+    "file": "news.html",
+    "status": 200,
+    "bytes": 244628,
+    "sha256": "90dd9aa4b5a34611ed8b7fa885c79b46523634d3eafbbd8d0d1afdf1c7a559df"
+  },
+  {
+    "url": "https://www.autofixkorea.com/review",
+    "file": "review.html",
+    "status": 200,
+    "bytes": 252387,
+    "sha256": "78ebb66d3dfa863912d3fd8293b6c8f7f944af51e7519abbcf4fdfa1c70dfda4"
+  },
+  {
+    "url": "https://www.autofixkorea.com/download",
+    "file": "download.html",
+    "status": 200,
+    "bytes": 248456,
+    "sha256": "af2ad3bb9f75d9dbbc1960d4d17cac834222868c766b4fcee87a95b93cc55ab5"
+  },
+  {
+    "url": "https://www.autofixkorea.com/sitemap.xml",
+    "file": "sitemap.txt",
+    "status": 200,
+    "bytes": 830,
+    "sha256": "ee06d5b25027984f1636b3e975427433e91b5145051f6b031c12ca58b7bec7ee"
+  },
+  {
+    "url": "https://www.autofixkorea.com/robots.txt",
+    "file": "robots.txt",
+    "status": 200,
+    "bytes": 292,
+    "sha256": "78ea6be76a594f908f726b2cd749cfadb4a5a4cea03285a7c194a164ecf6a0c3"
+  },
+  {
+    "url": "https://www.autofixkorea.com/rss",
+    "file": "rss.txt",
+    "status": 200,
+    "bytes": 3058,
+    "sha256": "3174050461c8adb448779e1211cec6df2c59c2f5e2256116537c11a46dadcc5b"
+  },
+  {
+    "url": "https://www.autofixkorea.com/llms.txt",
+    "file": "llms.txt",
+    "status": 200,
+    "bytes": 1959,
+    "sha256": "5413e5934a8b80d715841708a167f2216bc92c8bc7ba4c1ea4b3ca49b8646bc1"
+  },
+  {
+    "url": "https://www.autofixkorea.com/car",
+    "file": "car.html",
+    "status": 200,
+    "bytes": 301993,
+    "sha256": "80af796252578dafaf8f89c6454e69f3807b321c612dadbcab28b879cb37f170"
+  },
+  {
+    "url": "https://www.autofixkorea.com/19",
+    "file": "19.html",
+    "status": 200,
+    "bytes": 251830,
+    "sha256": "336ef31f51b9798bac8bf6aaa34155d6afd764648435671c6664824b52fbaced"
+  },
+  {
+    "url": "https://www.autofixkorea.com/pro",
+    "file": "pro.html",
+    "status": 200,
+    "bytes": 208281,
+    "sha256": "0bcd700f2296240472209b692748dbc59879089c9a454f722bc6b43b0b45f947"
+  },
+  {
+    "url": "https://www.autofixkorea.com/21",
+    "file": "21.html",
+    "status": 200,
+    "bytes": 213608,
+    "sha256": "942fe18b859196166d7c4d5d28a5f3eb0d6e25bd7cbdf05d1cbab4ab3193727e"
+  }
+]

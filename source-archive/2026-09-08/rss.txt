@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>    <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+        <channel>
+            <title>사고차 매입·판매·수리 전문 | 오토픽스코리아</title>
+            <link>http://www.autofixkorea.com</link>
+            <description>20년 경력 사고차매입·수리 전문 오토픽스코리아. 보험불가 사고, 전손사고, 전기차 사고, 수입차 사고차까지 차량 상태를 사진으로 확인 후 국내외 거래처 비교견적을 통해 빠르고 정확한 상담을 진행합니다. 사고난 차량 그대로 매입부터 합리적인 사고차 수리 상담까지 가능하며 전국 사고차 매입 및 수리 상담을 지원합니다. 감가 없는 투명한 견적과 다양한 처리 방법으로 사고차 판매와 수리를 동시에 안내합니다.</description>
+            <language>ko</language>
+            <pubDate>Tue, 08 Sep 2026 15:51:08 +0900</pubDate>
+            <generator>사고차 매입·판매·수리 전문 | 오토픽스코리아</generator>
+            <managingEditor>jeongsseongg@gmail.com (사고차 매입·판매·수리 전문 | 오토픽스코리아)</managingEditor>
+            <atom:link href="http://www.autofixkorea.com/rss" rel="self" type="application/rss+xml" />
+                            <image>
+                    <title>사고차 매입·판매·수리 전문 | 오토픽스코리아</title>
+                    <url>
+                        https://cdn.imweb.me/thumbnail/20260908/9e676c150d257.jpg                    </url>
+                    <link>http://www.autofixkorea.com</link>
+                    <description>20년 경력 사고차매입·수리 전문 오토픽스코리아. 보험불가 사고, 전손사고, 전기차 사고, 수입차 사고차까지 차량 상태를 사진으로 확인 후 국내외 거래처 비교견적을 통해 빠르고 정확한 상담을 진행합니다. 사고난 차량 그대로 매입부터 합리적인 사고차 수리 상담까지 가능하며 전국 사고차 매입 및 수리 상담을 지원합니다. 감가 없는 투명한 견적과 다양한 처리 방법으로 사고차 판매와 수리를 동시에 안내합니다.</description>
+                </image>
+                <item><title>ㄷㄹ</title><link>http://www.autofixkorea.com/19/?idx=171162875&amp;bmode=view</link><guid isPermaLink="true">http://www.autofixkorea.com/19/?idx=171162875&amp;bmode=view</guid><description></description><author>관리자</author><pubDate>Wed, 06 May 2026 22:17:52 +0900</pubDate></item>
+<item><title>사고차 사진</title><link>http://www.autofixkorea.com/19/?idx=170844510&amp;bmode=view</link><guid isPermaLink="true">http://www.autofixkorea.com/19/?idx=170844510&amp;bmode=view</guid><description></description><media:content url="https://cdn.imweb.me/thumbnail/20260908/9e676c150d257.jpg" type="image/jpeg" /><author>관리자</author><pubDate>Tue, 14 Apr 2026 15:26:21 +0900</pubDate></item>        </channel>
+    </rss>

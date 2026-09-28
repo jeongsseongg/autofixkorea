@@ -5,3 +5,20 @@ preview.png
 preview-mobile.png
 tmp-process-images/
 buy-review-preview.png
+dist/
+release/
+standalone/
+*.tar.gz
+source-archive/assets/
+out/
+node_modules/
+.firebase/
+firebase-debug*.log
+supabase/.temp/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example

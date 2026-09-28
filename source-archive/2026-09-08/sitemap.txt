@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+	<url>
+		<loc>http://www.autofixkorea.com/Home</loc>
+				<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>http://www.autofixkorea.com/review</loc>
+				<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>http://www.autofixkorea.com/download</loc>
+				<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>http://www.autofixkorea.com/news</loc>
+				<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>http://www.autofixkorea.com/car</loc>
+				<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>http://www.autofixkorea.com/19</loc>
+				<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>http://www.autofixkorea.com/pro</loc>
+				<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>http://www.autofixkorea.com/21</loc>
+				<priority>0.8</priority>
+	</url>
+</urlset>

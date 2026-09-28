@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /site_join
+Disallow: /site_join_agree
+Disallow: /login
+Disallow: /logout.cm
+Disallow: /shop_cart
+Disallow: /?mode*
+Disallow: /admin
+User-agent: *
+Allow: /
+
+Sitemap: https://www.autofixkorea.com/sitemap.xml
+Sitemap: https://www.autofixkorea.com/sitemap.xml

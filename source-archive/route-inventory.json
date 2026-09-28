@@ -1,0 +1,47 @@
+[
+  {
+    "path": "/",
+    "widgets": 7,
+    "title": "사고차 매입 · 수리 판매까지 한번에"
+  },
+  {
+    "path": "/Home",
+    "widgets": 7,
+    "title": "사고차 매입 · 수리 판매까지 한번에"
+  },
+  {
+    "path": "/news",
+    "widgets": 1,
+    "title": "사고차 매입절차"
+  },
+  {
+    "path": "/review",
+    "widgets": 1,
+    "title": "실제 사고차 매입 후기"
+  },
+  {
+    "path": "/download",
+    "widgets": 1,
+    "title": "사고차 상담"
+  },
+  {
+    "path": "/car",
+    "widgets": 1,
+    "title": "오토픽스코리아 경매"
+  },
+  {
+    "path": "/19",
+    "widgets": 0,
+    "title": "오토픽스코리아"
+  },
+  {
+    "path": "/pro",
+    "widgets": 1,
+    "title": "최상의 퀄리티 원스톱 정비 서비스"
+  },
+  {
+    "path": "/21",
+    "widgets": 0,
+    "title": "오토픽스코리아"
+  }
+]

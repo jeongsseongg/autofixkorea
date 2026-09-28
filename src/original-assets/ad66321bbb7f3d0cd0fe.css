@@ -1,0 +1,20 @@
+/* latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: url("/original-assets/5f4db421c0ee854a8d88.eot");
+  src: url("/original-assets/16f9ef87549612731bb7.eot") format("embedded-opentype"), url("/original-assets/b0083b39ed93c4af0a7b.woff2") format("woff2"), url("/original-assets/4b251a6fd8dca125e498.woff") format("woff"), url("/original-assets/2337074f243120a964a8.ttf") format("truetype");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+  font-display: swap;
+}
+/* latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 700;
+  src: url("/original-assets/06619795746eec8265f1.eot");
+  src: url("/original-assets/fceacaaa8dc33c360df2.eot") format("embedded-opentype"), url("/original-assets/c034d20edf764638e7f9.woff2") format("woff2"), url("/original-assets/856bfcf9c6cabb7416e3.woff") format("woff"), url("/original-assets/1d9b36e51c1f362cf57d.ttf") format("truetype");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+  font-display: swap;
+}
