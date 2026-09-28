@@ -1,0 +1,14 @@
+{
+  "hosting": {
+    "site": "autofixkorea",
+    "public": "out",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "_headers", "_redirects"],
+    "headers": [
+      {"source": "**", "headers": [
+        {"key": "X-Content-Type-Options", "value": "nosniff"},
+        {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
+        {"key": "X-Autofix-Hosting", "value": "firebase"}
+      ]}
+    ]
+  }
+}

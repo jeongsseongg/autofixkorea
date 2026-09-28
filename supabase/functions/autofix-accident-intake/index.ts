@@ -3,7 +3,7 @@ import {notifyReceipt} from './telegram.ts';
 declare const EdgeRuntime:{waitUntil(task:Promise<unknown>):void};
 const base=Deno.env.get('SUPABASE_URL')||'',service=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||'';
 const bucket='autofix-accident-photos';
-const origins=new Set(['https://autofixkorea.pages.dev','https://autofix-independent.soun7701.chatgpt.site','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328','http://localhost:4328']);
+const origins=new Set(['https://autofixkorea.web.app','https://autofixkorea.firebaseapp.com','https://autofixkorea.pages.dev','https://autofix-independent.soun7701.chatgpt.site','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328','http://localhost:4328']);
 const auth={apikey:service,Authorization:'Bearer '+service};
 async function hash(value:string){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(x=>x.toString(16).padStart(2,'0')).join('');}
 async function request(path:string,method='GET',body?:unknown){

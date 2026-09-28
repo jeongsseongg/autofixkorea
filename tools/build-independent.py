@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'out'
 PAGES=ROOT/'src/pages'
+PRODUCTION='--production' in sys.argv
+ROBOTS='index,follow' if PRODUCTION else 'noindex,nofollow'
 OUT.mkdir(exist_ok=True)
 for folder in ['services','config','styles']:
     shutil.copytree(ROOT/'src'/folder,OUT/'src'/folder,dirs_exist_ok=True)
@@ -36,6 +38,10 @@ routes=json.loads((PAGES/'routes.json').read_text(encoding='utf-8'))
 for route in routes:
     text=re.sub(r'\{\{include:([^}]+)\}\}',include,(PAGES/route['template']).read_text(encoding='utf-8'))
     page=BeautifulSoup(text,'html.parser')
+    for meta in page.select('meta[name="robots"]'):
+        meta['content']=ROBOTS
+    for link in page.select('a[data-contact-open], a[href="#autofixContact"]'):
+        link['href']='/consultation/'
     page.head.append(page.new_tag('link',rel='stylesheet',href='/src/styles/contact-dialog.css'))
     page.body.append(BeautifulSoup('<footer class="af-contact-footer"><a data-contact-direct href="tel:01041027437">전화 상담 010-4102-7437</a></footer>','html.parser'))
     for frame in list(page.find_all('iframe')):
@@ -53,10 +59,17 @@ for i,review in enumerate(reviews):
     path=OUT/route.lstrip('/')/'index.html'
     path.parent.mkdir(parents=True,exist_ok=True)
     text='<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><link rel="canonical" href="https://www.autofixkorea.com'+route+'"><title>'+review['title']+'</title><link rel="stylesheet" href="/src/detail.css"><script type="module" src="/src/app/independent.js"></script></head><body><main><a href="/review">AUTOFIX KOREA · 매입후기</a><h1>'+review['title']+'</h1><img src="/review-images/'+review['img']+'" alt="'+review['car']+'"><p>'+review['process']+'</p></main></body></html>'
-    path.write_text(text,encoding='utf-8')
+    path.write_text(text.replace('noindex,nofollow',ROBOTS),encoding='utf-8')
 shutil.copy2(ROOT/'src/site.css',OUT/'src/detail.css')
 shutil.copytree(ROOT/'src/features/accident-intake',OUT/'consultation',dirs_exist_ok=True)
 (OUT/'404.html').write_text('<!doctype html><html lang="ko"><meta charset="utf-8"><title>페이지 없음</title><h1>페이지를 찾을 수 없습니다</h1><a href="/">AUTOFIX KOREA</a></html>',encoding='utf-8')
-(OUT/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')
-(OUT/'_headers').write_text('/*\n  X-Robots-Tag: noindex, nofollow\n  X-Content-Type-Options: nosniff\n',encoding='utf-8')
+robots='User-agent: *\nAllow: /\nSitemap: https://www.autofixkorea.com/sitemap.xml\n' if PRODUCTION else 'User-agent: *\nDisallow: /\n'
+(OUT/'robots.txt').write_text(robots,encoding='utf-8')
+headers='/*\n  X-Content-Type-Options: nosniff\n'
+headers+=('https://:project.pages.dev/*\n  X-Robots-Tag: noindex\nhttps://:version.:project.pages.dev/*\n  X-Robots-Tag: noindex\n' if PRODUCTION else '  X-Robots-Tag: noindex, nofollow\n')
+(OUT/'_headers').write_text(headers,encoding='utf-8')
+urls=[route['path'] for route in routes]+[f'/review/case-{i+1}' for i in range(len(reviews))]
+sitemap='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+sitemap+=''.join('<url><loc>https://www.autofixkorea.com'+url+'</loc></url>' for url in urls if PRODUCTION)
+(OUT/'sitemap.xml').write_text(sitemap+'</urlset>',encoding='utf-8')
 print('Independent offline build:',len(routes)+len(reviews),'routes. Source: src/pages + feature modules.')

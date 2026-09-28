@@ -6,7 +6,10 @@
     "build": "python tools/build-independent.py",
     "dev": "node tools/serve-independent.mjs",
     "check": "node tools/check.mjs",
-    "deploy": "wrangler pages deploy out --project-name autofixkorea --branch main",
+    "build:production": "python tools/build-independent.py --production",
+    "check:independent": "node tools/check-independent.mjs",
+    "deploy": "npm run build:production && npm run check:independent && npx --yes firebase-tools@14.17.0 deploy --only hosting:autofixkorea --project promotors-8ddec",
+    "deploy:cloudflare": "npm run build:production && wrangler pages deploy out --project-name autofixkorea --branch main",
     "preview": "node tools/serve-independent.mjs"
   },
   "devDependencies": {

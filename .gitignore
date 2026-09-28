@@ -12,6 +12,8 @@ standalone/
 source-archive/assets/
 out/
 node_modules/
+.firebase/
+firebase-debug*.log
 supabase/.temp/
 
 # wrangler files

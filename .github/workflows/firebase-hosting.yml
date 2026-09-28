@@ -1,0 +1,32 @@
+name: AutoFix Firebase Hosting
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: autofix-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: vars.AUTOFIX_FIREBASE_CI_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r tools/requirements.txt
+      - run: npm ci
+      - run: npm run build:production && npm run check:independent
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/274198484245/locations/global/workloadIdentityPools/autofix-github/providers/github
+          service_account: autofix-hosting-deploy@promotors-8ddec.iam.gserviceaccount.com
+      - run: npx --yes firebase-tools@14.17.0 deploy --only hosting:autofixkorea --project promotors-8ddec --non-interactive
