@@ -1,3 +1,4 @@
+import {mountRegistration} from './registration.js';
 import {authenticate,request,hasSession,logout} from '../../services/listings/index.js';
 import {mountAdmin,editListing} from './management.js';
 const $=id=>document.getElementById('lot-'+id);
@@ -34,27 +35,25 @@ async function refresh(){
  if(!lots.length)$('list').append(node('p','현재 공유된 매물이 없습니다.'));
 }
 async function state(){
- clearPhotos();for(const id of ['login','apply','pending','market','admin'])$(id).hidden=true;
+ clearPhotos();for(const id of ['login','pending','market','admin'])$(id).hidden=true;
  $('logout').hidden=!hasSession();
  if(!hasSession()){$('login').hidden=false;return;}
  try{dealer=await request('me');}catch(error){$('login').hidden=false;throw error;}
- if(!dealer){$('apply').hidden=false;return;}
  if(dealer.status!=='approved'){$('pending').hidden=false;return;}
  $('market').hidden=false;await refresh();
- if(dealer.role==='admin'){$('admin').hidden=false;await mountAdmin(message);}
+ if(dealer.role==='admin'){$('admin').hidden=false;await mountAdmin(message);mountRegistration(message,refresh);}
 }
 export async function mount(){
+ $('role').addEventListener('change',()=>{const role=$('role').value;$('dealer-id').hidden=role!=='dealer';$('setup-code').hidden=role!=='setup';});
  $('login-form').addEventListener('submit',async event=>{
   event.preventDefault();const values=Object.fromEntries(new FormData(event.target));
-  const signup=event.submitter?.name==='signup';
   const buttons=[...event.target.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);
   try{
-   message('로그인 확인 중…');const active=await authenticate(values.email,values.password,signup);
-   event.target.reset();await state();message(active?'':'가입 이메일의 인증 링크를 확인한 뒤 로그인해 주세요.');
+   message('로그인 확인 중…');const active=await authenticate(values.role,values.password,values.login_id,values.code);
+   event.target.reset();await state();message(active?'로그인했습니다.':'');
   }catch(error){message(error.message);}finally{buttons.forEach(b=>b.disabled=false);}
  });
- $('apply-form').addEventListener('submit',event=>{event.preventDefault();run(async()=>{await request('apply',Object.fromEntries(new FormData(event.target)));await state();});});
- $('logout').addEventListener('click',()=>{logout();dealer=null;$('detail').close();$('detail-body').replaceChildren();$('list').replaceChildren();run(state);});
+ $('logout').addEventListener('click',()=>run(async()=>{try{await logout();}finally{dealer=null;$('detail').close();$('detail-body').replaceChildren();$('list').replaceChildren();await state();}}));
  $('close').addEventListener('click',()=>$('detail').close());
  $('detail').addEventListener('close',()=>{clearPhotos();$('detail-body').replaceChildren();});
  $('refresh').addEventListener('click',()=>run(state));$('reload').addEventListener('click',()=>run(refresh));

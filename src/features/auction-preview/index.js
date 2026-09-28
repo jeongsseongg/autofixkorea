@@ -1,5 +1,5 @@
 export function mount() {
-var AUCTION_URL='https://autofix-chi.vercel.app/';
+var AUCTION_URL='/listings/';
 var vp=document.getElementById('ofaVP');
 var track=document.getElementById('ofaTrack');
 var px=0,paused=false,timer=null;

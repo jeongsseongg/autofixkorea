@@ -1,13 +1,13 @@
 import {request} from '../../services/listings/index.js';
 function el(tag,text){const n=document.createElement(tag);n.textContent=text;return n;}
 async function members(message){
- const container=document.getElementById('lot-members');container.replaceChildren(el('h3','업체 승인'));
+ const container=document.getElementById('lot-members');container.replaceChildren(el('h3','업체 계정'));
  const rows=await request('members');
  for(const row of rows){
-  const item=el('div',row.company+' · '+row.business_number+' · '+row.status);
+  const item=el('div',row.name+' · '+row.login_id+' · '+row.status);
   if(row.role!=='admin')for(const [label,status] of [['승인','approved'],['이용 중지','suspended']]){
    const button=el('button',label);button.addEventListener('click',async()=>{
-    try{await request('approve',{id:row.user_id,status});await members(message);message('업체 상태를 변경했습니다.');}catch(error){message(error.message);}
+    try{await request('approve',{id:row.id,status});await members(message);message('업체 상태를 변경했습니다.');}catch(error){message(error.message);}
    });item.append(button);
   }container.append(item);
  }
@@ -18,6 +18,10 @@ async function sources(){
 }
 export async function mountAdmin(message){
  await members(message);await sources();
+ const dealerForm=document.getElementById('lot-dealer-form');
+ dealerForm.onsubmit=async event=>{
+  event.preventDefault();try{await request('dealer-save',Object.fromEntries(new FormData(dealerForm)));dealerForm.reset();await members(message);message('업체 계정을 저장했습니다.');}catch(error){message(error.message);}
+ };
  const form=document.getElementById('lot-source-form');
  form.onsubmit=async event=>{
   event.preventDefault();const values=Object.fromEntries(new FormData(form));

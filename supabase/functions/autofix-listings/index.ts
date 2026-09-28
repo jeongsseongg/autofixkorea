@@ -1,21 +1,14 @@
+import {manualListing} from '../autofix-listing-ingest/manual.ts';
+import {accountAction,accountMember,manageAccounts} from './accounts.ts';
 const base=Deno.env.get('SUPABASE_URL')||'',key=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||'';
 const auth={apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json'};
 const origins=new Set(['https://autofixkorea.com','https://www.autofixkorea.com','https://autofixkorea.web.app','https://autofixkorea.firebaseapp.com','https://autofixkorea--unified-listings-a2ykn7fk.web.app','http://localhost:4328','http://127.0.0.1:4328']);
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function rest(path:string,method='GET',body?:unknown){
  const response=await fetch(base+'/rest/v1/'+path,{method,headers:{...auth,Prefer:'return=representation'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(15000)});
- if(!response.ok)throw new Error('DATABASE_FAILED');return response.json();
+ if(!response.ok){const body=await response.text();const code=['INVALID_ADMIN_PASSWORD','INVALID_DEALER_LOGIN','INVALID_SESSION','INVALID_SETUP_CODE','ADMIN_EXISTS','INVALID_PASSWORD'].find(code=>body.includes(code));throw new Error(code||'DATABASE_FAILED');}return response.json();
 }
 function text(value:unknown,max:number){if(typeof value!=='string'||!value.trim()||value.length>max)throw new Error('INVALID_INPUT');return value.trim();}
-async function member(req:Request){
- const token=req.headers.get('authorization')||'';
- if(!token.startsWith('Bearer '))throw new Error('LOGIN_REQUIRED');
- const response=await fetch(base+'/auth/v1/user',{headers:{apikey:key,Authorization:token},signal:AbortSignal.timeout(15000)});
- if(!response.ok)throw new Error('LOGIN_REQUIRED');
- const user=await response.json();
- if(!user.id||user.is_anonymous||!user.email_confirmed_at)throw new Error('LOGIN_REQUIRED');
- const rows=await rest('autofix_dealers?user_id=eq.'+user.id+'&select=*');return {id:user.id,dealer:rows[0]||null};
-}
 async function photo(input:any,admin:boolean){
  if(!uuid.test(input.id)||!Number.isInteger(input.index)||input.index<0||input.index>9)throw new Error('INVALID_INPUT');
  const rows=await rest('autofix_listings?id=eq.'+input.id+'&select=status,photos');
@@ -26,11 +19,6 @@ async function photo(input:any,admin:boolean){
  return new Response(response.body,{headers:{'Content-Type':image.mime,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 }
 async function adminAction(input:any){
- if(input.action==='members')return rest('autofix_dealers?order=created_at.desc&limit=100');
- if(input.action==='approve'){
-  if(!uuid.test(input.id)||!['approved','suspended','pending'].includes(input.status))throw new Error('INVALID_INPUT');
-  return rest('autofix_dealers?user_id=eq.'+input.id+'&role=eq.dealer','PATCH',{status:input.status});
- }
  if(input.action==='sources')return rest('autofix_listing_sources?order=label');
  if(input.action==='source-add'){
   if(!['telegram','email'].includes(input.channel))throw new Error('INVALID_INPUT');
@@ -62,14 +50,12 @@ Deno.serve(async(req:Request)=>{
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers:cors});
  if(req.method!=='POST')return reply({code:'METHOD_REJECTED',traceId},405);
  try{
-  const actor=await member(req),raw=await req.text();if(raw.length>10000)throw new Error('INVALID_INPUT');
+  const raw=await req.text();if(raw.length>14000000)throw new Error('INVALID_INPUT');
   const input=JSON.parse(raw);
+  const login=await accountAction(input,req,rest);if(login!==undefined)return reply(login);
+  const actor=await accountMember(req,rest);
+  if(input.action==='logout')return reply(await rest('rpc/ofa_logout','POST',{p_token:actor.token}));
   if(input.action==='me')return reply(actor.dealer);
-  if(input.action==='apply'){
-   if(actor.dealer)throw new Error('ALREADY_APPLIED');
-   const business_number=text(input.business_number,12).replaceAll('-','');if(!/^\d{10}$/.test(business_number))throw new Error('INVALID_INPUT');
-   return reply(await rest('autofix_dealers','POST',{user_id:actor.id,company:text(input.company,100),business_number}));
-  }
   if(actor.dealer?.status!=='approved')throw new Error('APPROVAL_REQUIRED');
   const admin=actor.dealer.role==='admin';
   if(input.action==='list')return reply(await rest('autofix_listings?select=*&order=created_at.desc&limit=100'+(admin?'':'&status=in.(published,sold)')));
@@ -77,10 +63,12 @@ Deno.serve(async(req:Request)=>{
    const response=await photo(input,admin);for(const [k,v] of Object.entries(cors))response.headers.set(k,v);return response;
   }
   if(!admin)throw new Error('ADMIN_REQUIRED');
-  return reply(await adminAction(input));
+  if(input.action==='create')return reply(await manualListing(input,rest));
+  const accounts=await manageAccounts(input,actor.token,rest);
+  return reply(accounts!==undefined?accounts:await adminAction(input));
  }catch(error){
   const code=error instanceof Error?error.message:'SERVER_ERROR';console.error(JSON.stringify({traceId,code}));
-  const status=code==='LOGIN_REQUIRED'?401:['APPROVAL_REQUIRED','ADMIN_REQUIRED'].includes(code)?403:code==='NOT_FOUND'?404:/INVALID|ALREADY/.test(code)?400:503;
+  const status=code==='RATE_LIMITED'?429:['LOGIN_REQUIRED','INVALID_ADMIN_PASSWORD','INVALID_DEALER_LOGIN','INVALID_SESSION','INVALID_SETUP_CODE'].includes(code)?401:['APPROVAL_REQUIRED','ADMIN_REQUIRED'].includes(code)?403:code==='NOT_FOUND'?404:/INVALID|ALREADY/.test(code)?400:503;
   return reply({code:status===503?'SERVER_ERROR':code,traceId},status);
  }
 });
