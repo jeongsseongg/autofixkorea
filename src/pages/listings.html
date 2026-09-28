@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><link rel="canonical" href="https://www.autofixkorea.com/listings/">
+<title>업체 전용 매물 | 오토픽스코리아</title><link rel="stylesheet" href="/src/styles/listings.css">
+<script type="module" src="/src/app/independent.js"></script></head>
+<body data-page="listings"><header class="lot-header"><a href="/">AUTOFIX KOREA</a><span>업체 전용 매물</span><button id="lot-logout" hidden>로그아웃</button></header>
+<main class="lot-main"><p class="lot-eyebrow">PARTNER MARKET</p><h1>모든 매물을 한곳에서.</h1>
+<p>사진·가격·상세정보는 승인된 업체 회원에게만 제공됩니다.</p>
+<p id="lot-message" role="status" aria-live="polite"></p>
+<section id="lot-login" class="lot-panel"><h2>업체 로그인</h2><form id="lot-login-form">
+<label>이메일<input name="email" type="email" autocomplete="username" required></label>
+<label>비밀번호<input name="password" type="password" minlength="8" autocomplete="current-password" required></label>
+<div class="lot-actions"><button type="submit">로그인</button><button type="submit" name="signup" value="true">계정 만들기</button></div>
+<p>새 계정은 이메일 인증과 업체 승인이 필요합니다.</p></form></section>
+<section id="lot-apply" class="lot-panel" hidden><h2>업체 승인 신청</h2><form id="lot-apply-form">
+<label>업체명<input name="company" minlength="2" maxlength="100" required></label><label>사업자등록번호<input name="business_number" inputmode="numeric" pattern="[0-9-]{10,12}" required></label>
+<button type="submit">승인 신청</button></form></section>
+<section id="lot-pending" class="lot-panel" hidden><h2>업체 확인 대기</h2><p>승인이 완료되면 매물 사진과 가격을 확인할 수 있습니다.</p><button id="lot-refresh">승인 상태 확인</button></section>
+<section id="lot-market" hidden><div class="lot-actions"><h2>통합 매물</h2><button id="lot-reload">새로고침</button></div><div id="lot-list" class="lot-grid"></div></section>
+<section id="lot-admin" class="lot-panel" hidden><h2>매물·업체 관리</h2><p>수신 원본은 관리자만 확인할 수 있습니다. 가격과 차량 정보를 확인한 뒤 업체에 공유하세요.</p>
+<div id="lot-members"></div><h3>접수 허용 발신자</h3><div id="lot-sources"></div>
+<form id="lot-source-form"><label>접수 경로<select name="channel"><option value="telegram">텔레그램</option><option value="email">이메일</option></select></label>
+<label>발신자 식별값<input name="sender" placeholder="텔레그램 대화 ID 또는 이메일 주소" required></label><label>출처 이름<input name="label" maxlength="100" required></label>
+<label class="lot-checkbox"><input name="auto_publish" type="checkbox">정보와 사진이 갖춰지면 자동 공유</label><button>발신자 추가</button></form></section>
+<dialog id="lot-detail"><button id="lot-close" type="button">닫기</button><div id="lot-detail-body"></div></dialog>
+</main></body></html>
