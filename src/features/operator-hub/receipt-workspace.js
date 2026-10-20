@@ -1,7 +1,7 @@
 import {authenticate,hasSession,logout,request} from '../../services/listings/index.js';
 import {$,api,node,labels,statuses,download} from './api.js';
 import {openDetail,mountDetail,clearDetail} from './receipt-detail.js';
-import {receiptTarget,enterReceiptWorkspace} from './receipt-route.js';
+import {receiptTarget,enterReceiptWorkspace,watchReceiptNavigation} from './receipt-route.js';
 let items=[],offset=0,hasMore=false,gateway,target=null;
 function render(){
  const search=$('search').value.trim().toLowerCase(),visible=items.filter(row=>JSON.stringify([row.id,row.fields]).toLowerCase().includes(search));
@@ -35,6 +35,7 @@ export async function mount(dependencies={}){
  let initial=null;try{initial=receiptTarget(window.location.href);}catch{$('all-receipts').hidden=false;}
  $('direct-hint').hidden=!initial; // run(state) renders invalid-link errors after handlers are bound.
  mountDetail(async()=>{if(!target)await refresh();},gateway.api);
+ watchReceiptNavigation(window,()=>run(state));
  $('login-form').addEventListener('submit',event=>{event.preventDefault();run(async()=>{const button=event.submitter;button.disabled=true;try{await gateway.authenticate('admin',event.target.elements.password.value);event.target.reset();await state();}finally{button.disabled=false;}});});
  $('logout').addEventListener('click',()=>run(async()=>{try{await gateway.logout();}finally{showLogin();}}));
  $('refresh').addEventListener('click',()=>run(()=>target?openDetail(target):refresh()));$('search').addEventListener('input',render);

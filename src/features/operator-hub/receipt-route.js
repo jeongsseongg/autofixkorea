@@ -13,3 +13,6 @@ export async function enterReceiptWorkspace({location,gateway,login,authorized,o
  authorized(target);
  return target?openDetail(target):refresh();
 }
+export function watchReceiptNavigation(host,listener){
+ host.addEventListener('hashchange',listener);return ()=>host.removeEventListener('hashchange',listener);
+}
