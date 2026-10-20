@@ -1,9 +1,10 @@
 import {validate,imageMatches} from './validation.js';
-import {notifyReceipt} from './telegram.ts';
+import {acquisition} from './acquisition.js';
+import {notifyGalleryReceipt as notifyReceipt} from './telegram.ts';
 declare const EdgeRuntime:{waitUntil(task:Promise<unknown>):void};
 const base=Deno.env.get('SUPABASE_URL')||'',service=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||'';
 const bucket='autofix-accident-photos';
-const origins=new Set(['https://autofixkorea.web.app','https://autofixkorea.firebaseapp.com','https://autofixkorea.pages.dev','https://autofix-independent.soun7701.chatgpt.site','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328','http://localhost:4328']);
+const origins=new Set(['https://autofixkorea.web.app','https://autofixkorea.firebaseapp.com','https://autofixkorea.pages.dev','https://autofix-independent.soun7701.chatgpt.site','https://www.autofixkorea.com','https://autofixkorea.com','http://127.0.0.1:4328','http://localhost:4328','http://127.0.0.1:4335','http://localhost:4335']);
 const auth={apikey:service,Authorization:'Bearer '+service};
 async function hash(value:string){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))].map(x=>x.toString(16).padStart(2,'0')).join('');}
 async function request(path:string,method='GET',body?:unknown){
@@ -14,6 +15,9 @@ async function request(path:string,method='GET',body?:unknown){
 async function start(input:any,ip:string){
  const data=validate(input);
  await request('/rest/v1/rpc/autofix_accident_start','POST',{p_id:input.id,p_token:await hash(input.token),p_hash:await hash(JSON.stringify(data)),p_ip:await hash(service+ip),p_values:data.values,p_photos:data.photos});
+ const context=acquisition(input.acquisition);
+ if(context)try{await request('/rest/v1/rpc/autofix_intake_acquisition_save','POST',{p_id:input.id,p_context:context});}
+ catch{console.error(JSON.stringify({traceId:input.id,code:'ACQUISITION_SAVE_PENDING'}));}
  const uploads=[];
  for(const p of data.photos){
   const signed=await request('/storage/v1/object/upload/sign/'+bucket+'/'+p.path,'POST',{});
@@ -26,7 +30,7 @@ async function start(input:any,ip:string){
 async function complete(input:any){
  const rows=await request('/rest/v1/autofix_accident_intakes?id=eq.'+input.id+'&select=*');
  const row=rows[0];if(!row||row.token_hash!==await hash(input.token))throw new Error('NOT_AUTHORIZED');
- if(row.status==='complete')return {id:row.id,success:true,notification:queueNotification(row.id)};
+ if(row.status==='complete'){await confirmAnalytics(row.id);return {id:row.id,success:true,notification:queueNotification(row.id)};}
  for(const p of row.photos){
   const r=await fetch(base+'/storage/v1/object/authenticated/'+bucket+'/'+p.path,{headers:{...auth,Range:'bytes=0-11'},signal:AbortSignal.timeout(15000)});
   if(!r.ok)throw new Error('PHOTOS_INCOMPLETE');
@@ -35,7 +39,12 @@ async function complete(input:any){
   if(size!==p.size||!first.value||!imageMatches(first.value,p.mime))throw new Error('INVALID_IMAGE');
  }
  await request('/rest/v1/autofix_accident_intakes?id=eq.'+input.id,'PATCH',{status:'complete',completed_at:new Date().toISOString()});
+ await confirmAnalytics(row.id);
  return {id:row.id,success:true,notification:queueNotification(row.id)};
+}
+async function confirmAnalytics(id:string){
+ try{await request('/rest/v1/rpc/autofix_intake_acquisition_confirm','POST',{p_id:id});}
+ catch{console.error(JSON.stringify({traceId:id,code:'ACQUISITION_CONFIRM_PENDING'}));}
 }
 function queueNotification(id:string){
  EdgeRuntime.waitUntil(notifySafely(id));return 'processing';
