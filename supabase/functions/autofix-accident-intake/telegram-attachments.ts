@@ -1,9 +1,9 @@
 import {receiptText,receiptParts} from './telegram-content.ts';
 import {photoArchive} from './telegram-archive.ts';
 import {receiptNotificationText} from './telegram-summary.ts';
+import {receiptButtons} from './telegram-receipt-display.ts';
 export function receiptOperations(row:any){
- const text=receiptText(row),digits=String(row.values.contact||'').replace(/[^0-9]/g,'');
- const reply_markup=/^0\d{9,10}$/.test(digits)?{inline_keyboard:[[{text:'전화번호 복사',copy_text:{text:digits}}]]}:undefined;
+ const text=receiptText(row),reply_markup=receiptButtons(row);
  const operations:any[]=receiptParts(receiptNotificationText(row)).map((part,i)=>({kind:'text',text:part,...(i===0?{reply_markup}:{})}));
  let album:number[]=[],bytes=0;
  const flush=()=>{if(album.length){operations.push({kind:'album',indices:album,caption:'오토픽스코리아 · '+row.id+' · 차량 사진'});album=[];bytes=0;}};
@@ -33,7 +33,7 @@ export async function attachmentBody(row:any,operation:any,chat:string,asDocumen
  const body=new FormData();body.set('chat_id',chat);body.set('protect_content','false');
  if(operation.kind==='receipt'){
   body.set('document',new Blob(['\uFEFF'+operation.text],{type:'text/plain;charset=utf-8'}),'autofix-'+row.id+'-receipt.txt');
-  body.set('caption','접수 글 저장 · '+row.id);return {method:'sendDocument',body,count:1};
+  body.set('caption',operation.caption||'접수 글 저장 · '+row.id);return {method:'sendDocument',body,count:1};
  }
  if(operation.kind==='archive'){
   const entries=[];for(const index of operation.indices)entries.push({name:filename(row,index),blob:await original(row,index)});

@@ -31,7 +31,7 @@ async function deliverReceipt(id:string,rest:Rest,plan:(row:any)=>any[],version:
   const operations=plan(row);
   const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(operations)));
   const digest=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');
-  let progress:any={version,digest,operations:{},summary_format:true,...(row.acquisition!==undefined?{acquisition_format:true}:{})};
+  let progress:any={version,digest,operations:{},summary_format:true,receipt_layout:2,...(row.acquisition!==undefined?{acquisition_format:true}:{})};
   try{const saved=JSON.parse(row.telegram_message_id||'null');if(saved){
    if(saved.version===version){if(saved.digest!==digest)throw Error('NOTIFICATION_FORMAT_CHANGED');progress=saved;}
    else if(saved.version||saved.texts||saved.photos||typeof saved!=='object')throw Error('NOTIFICATION_FORMAT_CHANGED');
@@ -51,11 +51,13 @@ async function sendOperations(row:any,operations:any[],progress:any,save:()=>Pro
  for(const [index,operation] of operations.entries()){
   const previous=progress.operations[index];if(previous?.state==='sent')continue;
   if(previous&&previous.state!=='retryable')throw Error('TELEGRAM_OUTCOME_UNKNOWN');
+  const replyTo=operation.replyToSummary?progress.operations[0]?.providerId?.messageIds?.[0]:undefined;
+  if(operation.replyToSummary&&(!Number.isSafeInteger(replyTo)||replyTo<1))throw Error('NOTIFICATION_CHECKPOINT_INVALID');
   // Download before marking sending: a storage failure has sent nothing.
   const attachment=operation.kind==='text'?null:await attachmentBody(row,operation,chat,operation.asDocument===true);
   progress.operations[index]={state:'sending'};await save();
   let providerId;
-  try{providerId=await sendOperation(row,operation,attachment,token,target);}
+  try{providerId=await sendOperation(row,operation,attachment,token,target,replyTo);}
   catch(e){
    const code=e instanceof Error?e.message:'';
    progress.operations[index]={state:code==='TELEGRAM_HTTP_429'?'retryable':code==='TELEGRAM_OUTCOME_UNKNOWN'?'uncertain':'blocked'};await save();throw e;
@@ -64,13 +66,15 @@ async function sendOperations(row:any,operations:any[],progress:any,save:()=>Pro
   await new Promise(r=>setTimeout(r,1100));
  }
 }
-async function sendOperation(row:any,operation:any,attachment:any,token:string,target:any){
+async function sendOperation(row:any,operation:any,attachment:any,token:string,target:any,replyTo?:number){
  const chat=target.chatId;
  if(operation.kind==='text')return telegram(token,'sendMessage',topicBody(target,{chat_id:chat,text:operation.text,reply_markup:operation.reply_markup,link_preview_options:{is_disabled:true},protect_content:false}));
+ if(replyTo)attachment.body.set('reply_parameters',JSON.stringify({message_id:replyTo,allow_sending_without_reply:false}));
  try{return await telegram(token,attachment.method,topicBody(target,attachment.body),attachment.count);}
  catch(e){
   if(operation.kind!=='album'||!(e instanceof Error)||e.message!=='TELEGRAM_HTTP_400')throw e;
   const fallback=await attachmentBody(row,operation,chat,true);
+  if(replyTo)fallback.body.set('reply_parameters',JSON.stringify({message_id:replyTo,allow_sending_without_reply:false}));
   return telegram(token,fallback.method,topicBody(target,fallback.body),fallback.count);
  }
 }

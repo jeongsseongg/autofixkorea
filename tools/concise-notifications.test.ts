@@ -1,7 +1,7 @@
 import {galleryOperations} from '../supabase/functions/autofix-accident-intake/telegram-gallery.ts';
 import {receiptOperations} from '../supabase/functions/autofix-accident-intake/telegram-attachments.ts';
 function assert(ok:unknown,message='assertion failed'):asserts ok{if(!ok)throw Error(message);}
-const row={id:'11111111-1111-4111-8111-111111111111',created_at:'2026-10-20T10:00:00Z',values:{service:'accidentSale',contact:'01000000000',manufacturer:'현대',model:'테스트',damagePart:'전면',longMemo:'원문보존'.repeat(300)},photos:[{path:'x',size:100,mime:'image/png',category:'vehicle'}]};
+const row={id:'11111111-1111-4111-8111-111111111111',created_at:'2026-10-20T10:00:00Z',telegram_message_id:JSON.stringify({version:3,summary_format:true,operations:{}}),values:{service:'accidentSale',contact:'01000000000',manufacturer:'현대',model:'테스트',damagePart:'전면',longMemo:'원문보존'.repeat(300)},photos:[{path:'x',size:100,mime:'image/png',category:'vehicle'}]};
 Deno.test('accident concise text retains original document, gallery and phone copy',()=>{
  for(const plan of [galleryOperations(row),receiptOperations(row)]){
   const texts=plan.filter(o=>o.kind==='text');assert(texts.length===1);
