@@ -1,3 +1,4 @@
+import {targetMatches} from '../_shared/telegram-forum.js';
 export async function telegram(token:string,method:string,body:FormData|object,count=1){
  let r:Response,data:any;
  try{
@@ -13,7 +14,9 @@ export async function telegram(token:string,method:string,body:FormData|object,c
  const group=messages[0]?.media_group_id;
  if(count>1&&(!group||messages.some((m:any)=>m.media_group_id!==group)))throw Error('TELEGRAM_OUTCOME_UNKNOWN');
  const destination=body instanceof FormData?body.get('chat_id'):(body as any).chat_id;
- if(/^-?\d+$/.test(String(destination))&&messages.some((m:any)=>String(m.chat?.id)!==String(destination)))throw Error('TELEGRAM_OUTCOME_UNKNOWN');
+ const thread=body instanceof FormData?body.get('message_thread_id'):(body as any).message_thread_id;
+ const target={chatId:String(destination),threadId:thread===undefined||thread===null?null:Number(thread),forum:thread!==undefined&&thread!==null};
+ if(messages.some((m:any)=>!targetMatches(m,target)))throw Error('TELEGRAM_OUTCOME_UNKNOWN');
  return {messageIds:ids,method,...(group?{mediaGroupId:group}:{}),
   photoCount:messages.filter((m:any)=>m.photo?.length).length,
   documentCount:messages.filter((m:any)=>m.document).length,

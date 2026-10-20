@@ -25,7 +25,7 @@ export async function intake(channel:string,raw:Uint8Array,req:Request){
  const row={id,channel,event_id:eventId,fields,photos};
  const inserted=await rest('autofix_channel_messages?on_conflict=channel,event_id','POST',row);
  if(!inserted.length)return {duplicate:true};
- try{await notify(row,event,files);await rest('autofix_channel_messages?id=eq.'+id,'PATCH',{telegram_status:'sent'});}
+ try{const status=await notify({...row,...inserted[0]},event,files);if(status==='sent')await rest('autofix_channel_messages?id=eq.'+id,'PATCH',{telegram_status:'sent'});}
  catch(error){const message=error instanceof Error?error.message:'';const code=/^[A-Z][A-Z0-9_]+$/.test(message)?message:'NOTIFICATION_FAILED';console.error(JSON.stringify({receiptId:id,code}));await rest('autofix_channel_messages?id=eq.'+id,'PATCH',{telegram_status:'failed',notification_error:code});}
  return {id,success:true};
 }

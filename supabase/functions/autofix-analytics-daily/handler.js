@@ -27,18 +27,21 @@ async function createMessage(store, input, cutoff, now) {
   return dailyMessage(report, { date: input.date, cutoff: query.range.end });
 }
 async function runDaily(input, { store, transport, now, traceId }) {
+  if(await transport.beforeClaim?.(input,store,now)===false)return {status:'before_forum_start',date:input.date,mode:input.mode};
   const claim = await store.claim({ ...input, traceId });
   if (claim.status !== 'claimed') return { status: claim.status, date: input.date, mode: input.mode };
   const key = { date: input.date, mode: input.mode, token: claim.claim_token, traceId };
   let message = claim.message_text;
   try {
     if (message && claim.message_hash !== await messageHash(message)) throw problem('DAILY_PAYLOAD_CHANGED', 422);
+    if(message)transport.validateFrozen?.(message);
     if (!message) {
       message = await createMessage(store, input, claim.cutoff_at, now);
+      message=transport.freeze?.(message)??message;
       await store.prepare({ ...key, message, hash: await messageHash(message) });
     }
   } catch (error) {
-    const code = knownCode(error, 'REPORT_PREPARATION_FAILED'), blocked = ['REPORT_TRUNCATED', 'DAILY_PAYLOAD_CHANGED'].includes(code);
+    const code = knownCode(error, 'REPORT_PREPARATION_FAILED'), blocked = ['REPORT_TRUNCATED','DAILY_PAYLOAD_CHANGED','DAILY_DESTINATION_UNBOUND','DAILY_DESTINATION_CHANGED','DAILY_ROUTE_PAYLOAD_TOO_LARGE'].includes(code);
     await store.finish({ ...key, status: blocked ? 'blocked' : 'retryable', code, retryAfter: 300 });
     if (blocked) throw problem(code, 422);
     return { status: 'retryable', date: input.date, mode: input.mode, code };
@@ -70,6 +73,7 @@ export function createDailyHandler({ store, transport, secret, authorize, now = 
       const url = new URL(request.url), path = /\/autofix-analytics-daily\/(run|preview|finalize)\/?$/.exec(url.pathname)?.[1];
       if (!path || url.search) throw problem('NOT_FOUND', 404);
       const input = dailyRequest(await inputBody(request), now());
+      transport?.assertReady?.(); // Validate the entire server-owned target setting before any queue claim.
       if (path === 'finalize') return respond(200, await finalizeDaily(input, {store, transport, now:now(), traceId}));
       if (path === 'preview') return respond(200, { date: input.date, mode: input.mode,
         text: await createMessage(store, input, input.scheduled, now()) });

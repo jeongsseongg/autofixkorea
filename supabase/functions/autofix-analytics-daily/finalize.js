@@ -5,13 +5,20 @@ import { messageHash, knownCode } from './contract.js';
 
 export async function finalizeDaily(input, { store, transport, now, traceId }) {
   if (+now < Date.parse(input.query.range.end)) throw problem('DAY_NOT_CLOSED', 425);
+  transport?.assertReady?.();
   if (!transport?.edit) throw problem('TELEGRAM_NOT_CONFIGURED', 503);
+  if(await transport.beforeClaim?.(input,store,now)===false)return {status:'before_forum_start',date:input.date,mode:input.mode};
   const claim = await store.claimFinal({ ...input, traceId });
   if (claim.status !== 'claimed') return { status: claim.status, date: input.date, mode: input.mode };
   const key = { date: input.date, mode: input.mode, token: claim.final_token, traceId };
   try {
+    if(transport.validateFrozen){
+      if(claim.message_hash!==await messageHash(claim.message_text||''))throw problem('DAILY_PAYLOAD_CHANGED',422);
+      transport.validateFrozen(claim.message_text);
+    }
     let text = claim.final_text;
     if (text && claim.final_hash !== await messageHash(text)) throw problem('DAILY_PAYLOAD_CHANGED', 422);
+    if(text)transport.validateFrozen?.(text);
     if (!text) {
       const query = { ...input.query, now: new Date(input.query.range.end) };
       const result = await store.read({ ...query.range, mode: input.mode });
@@ -19,6 +26,7 @@ export async function finalizeDaily(input, { store, transport, now, traceId }) {
       if(store.cumulative)report.cumulative=await store.cumulative(input.mode,query.range.end);
       text = dailyMessage(report,
         { date: input.date, cutoff: query.range.end, final: true });
+      text=transport.freeze?.(text)??text;
       await store.prepareFinal({ ...key, message: text, hash: await messageHash(text) });
     }
     await store.beginFinal(key);
@@ -28,7 +36,7 @@ export async function finalizeDaily(input, { store, transport, now, traceId }) {
       retryAfter: result?.retryAfter ?? 300 });
     return { status, date: input.date, mode: input.mode, messageId: claim.message_id };
   } catch (error) {
-    const code = knownCode(error, 'FINALIZATION_RETRY'), blocked = ['REPORT_TRUNCATED', 'DAILY_PAYLOAD_CHANGED'].includes(code);
+    const code = knownCode(error, 'FINALIZATION_RETRY'), blocked = ['REPORT_TRUNCATED','DAILY_PAYLOAD_CHANGED','DAILY_DESTINATION_UNBOUND','DAILY_DESTINATION_CHANGED','DAILY_ROUTE_PAYLOAD_TOO_LARGE'].includes(code);
     await store.finishFinal({ ...key, status: blocked ? 'blocked' : 'retryable', code, retryAfter: 300 });
     if (blocked) throw problem(code, 422);
     return { status: 'retryable', date: input.date, mode: input.mode, code };
