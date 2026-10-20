@@ -4,7 +4,7 @@ import {dailyTelegram} from '../supabase/functions/autofix-analytics-daily/teleg
 import {createDailyHandler} from '../supabase/functions/autofix-analytics-daily/handler.js';
 import {finalizeDaily} from '../supabase/functions/autofix-analytics-daily/finalize.js';
 import {dailyRequest,messageHash} from '../supabase/functions/autofix-analytics-daily/contract.js';
-const targets=JSON.stringify({intake:{chatId:'-1001234567890',threadId:12},daily:{chatId:'-1001234567890',threadId:34}});
+const targets=JSON.stringify({startsAt:'2026-10-20T00:00:00Z',intake:{chatId:'-1001234567890',threadId:12},daily:{chatId:'-1001234567890',threadId:34}});
 const setup=fetchImpl=>dailyTelegram({token:'123:synthetic',chatId:'123456',forumTargets:targets,fetchImpl});
 const ack=(body,extra={})=>Response.json({ok:true,result:{message_id:7,chat:{id:body.chat_id},message_thread_id:body.message_thread_id,text:body.text,...extra}});
 test('daily send and edit use exact topic, strip stored route marker, and reject a wrong-thread ACK',async()=>{
@@ -30,7 +30,7 @@ test('midnight finalization blocks a legacy or changed destination before begin/
   let begin=0,edits=0,finished;const t=setup(async(_url,init)=>{edits++;return ack(JSON.parse(init.body),{message_thread_id:34});});
   const primary=kind==='legacy'?'옛 보고':kind==='changed'?t.freeze('보고').replace(':34\n',':35\n'):t.freeze('보고');
   const final=t.freeze('확정');const claim={status:'claimed',final_token:'synthetic',message_id:'7',message_text:primary,message_hash:await messageHash(primary),final_text:final,final_hash:await messageHash(final)};
-  const store={claimFinal:async()=>claim,beginFinal:async()=>{begin++;},finishFinal:async v=>{finished=v;}};
+  const store={queuedAt:async()=>null,claimFinal:async()=>claim,beginFinal:async()=>{begin++;},finishFinal:async v=>{finished=v;}};
   const invoke=()=>finalizeDaily(input,{store,transport:t,now,traceId:'synthetic'});
   if(kind==='bound'){assert.equal((await invoke()).status,'finalized');assert.equal(edits,1);assert.equal(begin,1);}
   else{await assert.rejects(invoke,/DAILY_DESTINATION_(UNBOUND|CHANGED)/);assert.equal(edits,0);assert.equal(begin,0);assert.equal(finished.status,'blocked');}
@@ -43,8 +43,18 @@ test('unset config retains original daily bot and recipient behavior including u
 
 test('a retry with an old frozen primary is blocked before begin/send in the new topic',async()=>{
  let begin=0,calls=0,finished;const text='옛 방에 준비된 본문';const t=setup(async()=>{calls++;throw Error('unexpected network');});
- const store={claim:async()=>({status:'claimed',claim_token:'synthetic',message_text:text,message_hash:await messageHash(text)}),begin:async()=>{begin++;},finish:async value=>{finished=value;}};
+ const store={queuedAt:async()=>null,claim:async()=>({status:'claimed',claim_token:'synthetic',message_text:text,message_hash:await messageHash(text)}),begin:async()=>{begin++;},finish:async value=>{finished=value;}};
  const handler=createDailyHandler({store,transport:t,secret:'test',now:()=>new Date('2026-10-20T15:01:00Z'),log:()=>{}});
  const response=await handler(new Request('https://local.invalid/autofix-analytics-daily/run',{method:'POST',headers:{'content-type':'application/json','x-autofix-analytics-secret':'test'},body:JSON.stringify({date:'2026-10-20',mode:'test'})}));
  assert.equal(response.status,422);assert.equal((await response.json()).code,'DAILY_DESTINATION_UNBOUND');assert.equal(begin,0);assert.equal(calls,0);assert.equal(finished.status,'blocked');
+});
+
+test('pre-activation primary and final queues are excluded before claim without any status write',async()=>{
+ for(const path of ['run','finalize']){
+  let claims=0,writes=0,calls=0;const t=setup(async()=>{calls++;throw Error('unexpected');});
+  const store={queuedAt:async()=>'2026-10-19T23:59:59.999Z',claim:async()=>{claims++;},claimFinal:async()=>{claims++;},finish:async()=>{writes++;},finishFinal:async()=>{writes++;}};
+  const handler=createDailyHandler({store,transport:t,secret:'test',now:()=>new Date('2026-10-21T01:00:00Z'),log:()=>{}});
+  const response=await handler(new Request('https://local.invalid/autofix-analytics-daily/'+path,{method:'POST',headers:{'content-type':'application/json','x-autofix-analytics-secret':'test'},body:JSON.stringify({date:'2026-10-20',mode:'test'})}));
+  assert.equal(response.status,200);assert.equal((await response.json()).status,'before_forum_start');assert.equal(claims,0);assert.equal(writes,0);assert.equal(calls,0);
+ }
 });
