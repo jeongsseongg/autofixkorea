@@ -8,7 +8,7 @@ const targets=JSON.stringify({intake:{chatId:'-1001234567890',threadId:12},daily
 const setup=fetchImpl=>dailyTelegram({token:'123:synthetic',chatId:'123456',forumTargets:targets,fetchImpl});
 const ack=(body,extra={})=>Response.json({ok:true,result:{message_id:7,chat:{id:body.chat_id},message_thread_id:body.message_thread_id,text:body.text,...extra}});
 test('daily send and edit use exact topic, strip stored route marker, and reject a wrong-thread ACK',async()=>{
- const calls=[],t=setup(async(url,init)=>{const b=JSON.parse(init.body);calls.push({url,b});return ack(b);});
+ const calls=[],t=setup(async(url,init)=>{const b=JSON.parse(init.body);calls.push({url,b});return ack(b,url.endsWith("/editMessageText")?{message_thread_id:34}:{});});
  const frozen=t.freeze('보고');const sent=await t.send({text:frozen});assert.equal(sent.accepted,true);assert.equal(calls[0].b.text,'보고');assert.equal(calls[0].b.message_thread_id,34);
  assert.equal((await t.edit({id:'7',text:t.freeze('확정')})).accepted,true);assert.equal(calls[1].b.message_id,7);assert.equal(calls[1].b.message_thread_id,undefined);
  const wrong=setup(async(_url,init)=>ack(JSON.parse(init.body),{message_thread_id:12}));await assert.rejects(()=>wrong.send({text:wrong.freeze('보고')}),/TELEGRAM_OUTCOME_UNKNOWN/);
@@ -27,7 +27,7 @@ test('bad atomic config is rejected before a daily queue claim or network send',
 test('midnight finalization blocks a legacy or changed destination before begin/edit; bound primary works',async()=>{
  const now=new Date('2026-10-21T00:00:00Z'),input=dailyRequest({date:'2026-10-20',mode:'test'},now);
  for(const kind of ['legacy','changed','bound']){
-  let begin=0,edits=0,finished;const t=setup(async(_url,init)=>{edits++;return ack(JSON.parse(init.body));});
+  let begin=0,edits=0,finished;const t=setup(async(_url,init)=>{edits++;return ack(JSON.parse(init.body),{message_thread_id:34});});
   const primary=kind==='legacy'?'옛 보고':kind==='changed'?t.freeze('보고').replace(':34\n',':35\n'):t.freeze('보고');
   const final=t.freeze('확정');const claim={status:'claimed',final_token:'synthetic',message_id:'7',message_text:primary,message_hash:await messageHash(primary),final_text:final,final_hash:await messageHash(final)};
   const store={claimFinal:async()=>claim,beginFinal:async()=>{begin++;},finishFinal:async v=>{finished=v;}};
