@@ -40,3 +40,11 @@ test('unset config retains original daily bot and recipient behavior including u
  const calls=[],t=dailyTelegram({token:'123:original',chatId:'123456',fetchImpl:async(url,init)=>{const b=JSON.parse(init.body);calls.push({url,b});return ack(b);}});
  assert.equal((await t.send({text:'원래 보고'})).accepted,true);assert.equal(calls[0].b.chat_id,'123456');assert.equal(calls[0].b.message_thread_id,undefined);assert.ok(calls[0].url.includes('123:original'));
 });
+
+test('a retry with an old frozen primary is blocked before begin/send in the new topic',async()=>{
+ let begin=0,calls=0,finished;const text='옛 방에 준비된 본문';const t=setup(async()=>{calls++;throw Error('unexpected network');});
+ const store={claim:async()=>({status:'claimed',claim_token:'synthetic',message_text:text,message_hash:await messageHash(text)}),begin:async()=>{begin++;},finish:async value=>{finished=value;}};
+ const handler=createDailyHandler({store,transport:t,secret:'test',now:()=>new Date('2026-10-20T15:01:00Z'),log:()=>{}});
+ const response=await handler(new Request('https://local.invalid/autofix-analytics-daily/run',{method:'POST',headers:{'content-type':'application/json','x-autofix-analytics-secret':'test'},body:JSON.stringify({date:'2026-10-20',mode:'test'})}));
+ assert.equal(response.status,422);assert.equal((await response.json()).code,'DAILY_DESTINATION_UNBOUND');assert.equal(begin,0);assert.equal(calls,0);assert.equal(finished.status,'blocked');
+});

@@ -39,3 +39,7 @@ Deno.test('channel email text and attachments use the same topic and a wrong ACK
 Deno.test('unset config preserves original recipient and adds no topic',async()=>{
  await fixture(async f=>{equal(await notifyGalleryReceipt(f.row.id,f.rest),'sent');for(const c of f.calls){equal(String(c.body.chat_id),'123456');equal(c.body.message_thread_id,undefined);}},'');
 });
+
+Deno.test('one wrong-thread member in an album freezes that part without repeating sent text',async()=>{
+ await fixture(async f=>{const provider=globalThis.fetch;globalThis.fetch=async(url:any,init?:any)=>{const response=await provider(url,init);if(String(url).endsWith('/sendMediaGroup')){const body=await response.json();body.result[1].message_thread_id=999;return Response.json(body);}return response;};equal(await notifyGalleryReceipt(f.row.id,f.rest),'pending');const saved=JSON.parse(f.row.telegram_message_id);equal(saved.operations[0].state,'sent');equal(saved.operations[1].state,'uncertain');const calls=f.calls.length;equal(await notifyGalleryReceipt(f.row.id,f.rest),'pending');equal(f.calls.length,calls);});
+});
