@@ -62,6 +62,9 @@ for i,review in enumerate(reviews):
     path.write_text(text.replace('noindex,nofollow',ROBOTS),encoding='utf-8')
 shutil.copy2(ROOT/'src/site.css',OUT/'src/detail.css')
 shutil.copytree(ROOT/'src/features/accident-intake',OUT/'consultation',dirs_exist_ok=True)
+shutil.copytree(ROOT/'src/features/operator-hub',OUT/'src/features/operator-hub',dirs_exist_ok=True,ignore=shutil.ignore_patterns('page.html'))
+(OUT/'hub').mkdir(exist_ok=True)
+shutil.copy2(ROOT/'src/features/operator-hub/page.html',OUT/'hub/index.html')
 (OUT/'404.html').write_text('<!doctype html><html lang="ko"><meta charset="utf-8"><title>페이지 없음</title><h1>페이지를 찾을 수 없습니다</h1><a href="/">AUTOFIX KOREA</a></html>',encoding='utf-8')
 robots='User-agent: *\nAllow: /\nSitemap: https://www.autofixkorea.com/sitemap.xml\n' if PRODUCTION else 'User-agent: *\nDisallow: /\n'
 (OUT/'robots.txt').write_text(robots,encoding='utf-8')
@@ -72,4 +75,4 @@ urls=[route['path'] for route in routes if route['path']!='/listings/']+[f'/revi
 sitemap='<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
 sitemap+=''.join('<url><loc>https://www.autofixkorea.com'+url+'</loc></url>' for url in urls if PRODUCTION)
 (OUT/'sitemap.xml').write_text(sitemap+'</urlset>',encoding='utf-8')
-print('Independent offline build:',len(routes)+len(reviews),'routes. Source: src/pages + feature modules.')
+print('Independent offline build:',len(routes)+len(reviews)+1,'routes. Source: src/pages + feature modules.')
