@@ -2,15 +2,19 @@ import {authenticate,hasSession,logout,request} from '../../services/listings/in
 import {$,api,node,labels,statuses,download} from './api.js';
 import {openDetail,mountDetail,clearDetail} from './receipt-detail.js';
 import {receiptTarget,enterReceiptWorkspace,watchReceiptNavigation} from './receipt-route.js';
+import {vehicleName,receiptDate,serviceName} from './receipt-fields.js';
 let items=[],offset=0,hasMore=false,gateway,target=null;
 function render(){
  const search=$('search').value.trim().toLowerCase(),visible=items.filter(row=>JSON.stringify([row.id,row.fields]).toLowerCase().includes(search));
  $('rows').replaceChildren(...visible.map(row=>{
-  const card=node('article','','hub-card');
-  card.append(node('span',labels[row.source],'hub-chip'),node('h3',row.fields.subject||[row.fields.brand,row.fields.model].filter(Boolean).join(' ')||'차량 접수'));
-  card.append(node('p',new Date(row.created_at).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})),node('p',row.fields.name||row.fields.contact||row.fields.phone||'원본에서 확인'),node('p',statuses[row.progress]+' · '+(row.submission_status==='complete'?'접수 완료':'사진 업로드 대기')));
-  if(row.telegram_status==='failed')card.append(node('p','텔레그램 알림 실패 · 접수 원본은 저장되어 있습니다.'));
-  const button=node('button','입력 내용·사진 확인');button.addEventListener('click',()=>run(()=>openDetail({source:row.source,id:row.id})));card.append(button);return card;
+  const card=node('article','','hub-card'),identity=node('div','','hub-card-identity');
+  identity.append(node('span',serviceName(row.fields.service),'hub-chip'),node('h3',vehicleName(row.fields)),node('p',labels[row.source]+' · '+row.id.replaceAll('-','').slice(-8).toUpperCase()));
+  const contact=node('div','','hub-card-contact');contact.append(node('strong',row.fields.name||row.fields.contact||row.fields.phone||'연락처 확인 필요'),node('span',receiptDate(row.created_at)));
+  const state=node('div','','hub-card-state');state.append(node('span',statuses[row.progress]||'확인 필요','receipt-status'),node('small',row.submission_status==='complete'?'접수 완료':'사진 업로드 대기'));
+  if(row.telegram_status==='failed')state.append(node('small','알림 전송 확인 필요'));
+  state.querySelector('.receipt-status').dataset.progress=row.progress;
+  const button=node('button','접수 보기 →','hub-button-secondary');button.addEventListener('click',()=>run(()=>openDetail({source:row.source,id:row.id})));
+  card.append(identity,contact,state,button);return card;
  }));
  $('status').textContent=items.length?'이 페이지 '+items.length+'건 · 검색 결과 '+visible.length+'건':'접수 내역이 없습니다.';
  $('previous').disabled=offset===0;$('next').disabled=!hasMore;$('page').textContent=offset/50+1+' 페이지';
