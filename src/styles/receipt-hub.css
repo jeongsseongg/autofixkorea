@@ -2,3 +2,4 @@
 
 .hub-direct-mode .hub-channels,.hub-direct-mode .hub-toolbar,.hub-direct-mode .hub-grid,.hub-direct-mode .hub-pagination,.hub-direct-mode>p:not(#hub-status){display:none}
 .hub-photos figure{margin:0;display:grid;gap:10px}.hub-photos figure a{color:#a8d1ff;font-weight:600}.hub-photos figure img{max-width:100%;height:auto}#hub-all-receipts{margin-left:auto;margin-right:16px;color:#d0e7ff;font-weight:700}
+#hub-detail .hub-toolbar{flex-wrap:nowrap;align-items:center}#hub-detail h2{font-size:clamp(19px,5vw,24px);flex:1;min-width:0;line-height:1.45}#hub-close{flex:0 0 auto;white-space:nowrap}

@@ -1,10 +1,10 @@
 import {$,api,node,labels,statuses,download} from './api.js';
 import {questions,conditionFields,serviceTypes,accidentTypes} from '../../../consultation/src/form-fields.js';
 let current=null,urls=[],generation=0,call=api;
-const fields={name:'성함',contact:'연락처',phone:'연락처',brand:'제조사',model:'차종',year:'연식',mileage:'주행거리',region:'지역',price:'희망금액',memo:'메모',message:'문의 내용',subject:'제목',sender:'발신자',unknownQuestions:'확인이 필요한 항목',vehiclePhotosLater:'차량 사진 추후 제출',interiorPhotosLater:'실내 사진 추후 제출',airbagDetail:'에어백 상세',financeAmount:'할부·저당 금액',financeDetail:'할부·저당 상세'};
+const fields={name:'성함',contact:'연락처',phone:'연락처',brand:'제조사',model:'세부 모델·등급',service:'접수 구분',year:'연식',mileage:'주행거리',region:'지역',price:'희망금액',memo:'메모',message:'문의 내용',subject:'제목',sender:'발신자',unknownQuestions:'확인이 필요한 항목',vehiclePhotosLater:'차량 사진 추후 제출',interiorPhotosLater:'실내 사진 추후 제출',airbagDetail:'에어백 상세',financeAmount:'할부·저당 금액',financeDetail:'할부·저당 상세'};
 export function clearDetail(){generation++;urls.forEach(URL.revokeObjectURL);urls=[];current=null;$('detail-body').replaceChildren();$('note').value='';}
 function answer(key,value,names){
- if(key==='service')return serviceTypes.find(row=>row[0]===value)?.[1]||String(value);
+ if(key==='service')return {accidentSale:'사고차 매입',breakdownSale:'고장차 매입',accidentRepair:'사고차 수리'}[value]||String(value);
  if(key==='accidentType')return accidentTypes.find(row=>row[0]===value)?.[1]||String(value);
  if(key==='unknownQuestions')return String(value).split(',').map(id=>names[id]||id).join(', ');
  if(typeof value==='boolean')return value?'예':'아니오';return typeof value==='object'?JSON.stringify(value,null,2):String(value);
@@ -22,7 +22,8 @@ async function photo(row,index,container,version){
 export async function openDetail(key){
  clearDetail();const version=generation,row=await call('detail',key);if(version!==generation)return;current=row;
  $('detail-title').textContent=labels[row.source]+' 접수 상세';
- const body=$('detail-body'),time=new Date(row.created_at).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',hour12:false});
+ const parts=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(row.created_at)).map(p=>[p.type,p.value]));
+ const body=$('detail-body'),time=`${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}`;
  body.append(node('p','원본번호: '+row.id),node('p',time+' KST'));
  const summary=node('dl');summary.append(node('dt','진행 상태'),node('dd',statuses[row.progress]||'확인 필요'));body.append(summary);
  const names={...Object.fromEntries(questions.map(q=>[q.id,q.label])),...fields,...Object.fromEntries(conditionFields(row.fields.service).map(([id,label])=>[id,label]))};
