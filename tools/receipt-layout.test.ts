@@ -8,7 +8,7 @@ Deno.test('new receipt groups Korean fields, deduplicates model and supplies an 
  assert(text.includes('2026-10-20 22:55 KST'));assert(text.includes('현대 쏘나타'));assert(!text.includes('쏘나타 쏘나타'));
  assert(!text.split('\n').slice(0,3).join('').includes(fixture.row.id));assert(text.includes(fixture.row.id));
  const buttons=first.reply_markup.inline_keyboard.flat(),link=buttons.find((b:any)=>b.url)?.url;
- assert(link==='https://www.autofixkorea.com/hub/#source=accident&id='+fixture.row.id);assert(buttons.some((b:any)=>b.copy_text?.text==='01000000000'));
+ const url=new URL(link);assert(url.origin==='https://www.autofixkorea.com');assert(url.pathname==='/hub/');assert(url.searchParams.get('view')==='receipt');assert(url.hash==='#source=accident&id='+fixture.row.id);assert(buttons.some((b:any)=>b.copy_text?.text==='01000000000'));
  const album=operations.find((o:any)=>o.kind==='album');assert(album.replyToSummary===true);assert(album.caption.includes('현대 쏘나타'));assert(album.caption.includes('AF-1020-11111111'));
  assert(operations.find((o:any)=>o.kind==='receipt').text.includes('합성 원문 보존'));
 });
