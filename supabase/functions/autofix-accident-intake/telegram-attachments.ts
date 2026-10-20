@@ -1,9 +1,10 @@
 import {receiptText,receiptParts} from './telegram-content.ts';
 import {photoArchive} from './telegram-archive.ts';
+import {receiptNotificationText} from './telegram-summary.ts';
 export function receiptOperations(row:any){
  const text=receiptText(row),digits=String(row.values.contact||'').replace(/[^0-9]/g,'');
  const reply_markup=/^0\d{9,10}$/.test(digits)?{inline_keyboard:[[{text:'전화번호 복사',copy_text:{text:digits}}]]}:undefined;
- const operations:any[]=receiptParts(text).map((part,i)=>({kind:'text',text:part,...(i===0?{reply_markup}:{})}));
+ const operations:any[]=receiptParts(receiptNotificationText(row)).map((part,i)=>({kind:'text',text:part,...(i===0?{reply_markup}:{})}));
  let album:number[]=[],bytes=0;
  const flush=()=>{if(album.length){operations.push({kind:'album',indices:album,caption:'오토픽스코리아 · '+row.id+' · 차량 사진'});album=[];bytes=0;}};
  for(let i=0;i<row.photos.length;i++){

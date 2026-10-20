@@ -31,7 +31,7 @@ async function deliverReceipt(id:string,rest:Rest,plan:(row:any)=>any[],version:
   const operations=plan(row);
   const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(operations)));
   const digest=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');
-  let progress:any={version,digest,operations:{},...(row.acquisition!==undefined?{acquisition_format:true}:{})};
+  let progress:any={version,digest,operations:{},summary_format:true,...(row.acquisition!==undefined?{acquisition_format:true}:{})};
   try{const saved=JSON.parse(row.telegram_message_id||'null');if(saved){
    if(saved.version===version){if(saved.digest!==digest)throw Error('NOTIFICATION_FORMAT_CHANGED');progress=saved;}
    else if(saved.version||saved.texts||saved.photos||typeof saved!=='object')throw Error('NOTIFICATION_FORMAT_CHANGED');

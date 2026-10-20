@@ -1,9 +1,10 @@
 import {receiptText,receiptParts} from './telegram-content.ts';
+import {receiptNotificationText} from './telegram-summary.ts';
 // Photos arrive as Telegram albums so the client can save them to Photos/Gallery.
 export function galleryOperations(row:any){
  const text=receiptText(row),digits=String(row.values.contact||'').replace(/[^0-9]/g,'');
  const reply_markup=/^0\d{9,10}$/.test(digits)?{inline_keyboard:[[{text:'전화번호 복사',copy_text:{text:digits}}]]}:undefined;
- const operations:any[]=receiptParts(text).map((part,i)=>({kind:'text',text:part,...(i===0?{reply_markup}:{})}));
+ const operations:any[]=receiptParts(receiptNotificationText(row)).map((part,i)=>({kind:'text',text:part,...(i===0?{reply_markup}:{})}));
  let indices:number[]=[],bytes=0,documents=false;
  const flush=()=>{
   if(indices.length)operations.push({kind:'album',indices,asDocument:documents,
