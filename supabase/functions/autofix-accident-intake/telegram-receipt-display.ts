@@ -11,7 +11,7 @@ export function receiptIdentity(row:any){
  const parts=valid?Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(date).map(p=>[p.type,p.value])):{};
  const time=valid?`${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute} KST`:'접수일 확인 필요';
  const label=`AF-${valid?parts.month+parts.day:'미확인'}-${String(row.id).replaceAll('-','').slice(-8).toUpperCase()}`;
- return {time,label,vehicle:vehicleTitle(row.values),url:'https://www.autofixkorea.com/hub/#'+new URLSearchParams({source:'accident',id:row.id})};
+ return {time,label,vehicle:vehicleTitle(row.values),url:'https://www.autofixkorea.com/hub/?view=receipt#'+new URLSearchParams({source:'accident',id:row.id})};
 }
 export function receiptButtons(row:any){
  const digits=String(row.values.contact||'').replace(/[^0-9]/g,''),copy=/^0\d{9,10}$/.test(digits)?{text:'전화번호 복사',copy_text:{text:digits}}:null;

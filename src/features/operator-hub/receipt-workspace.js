@@ -32,7 +32,8 @@ const state=()=>enterReceiptWorkspace({location:window.location.href,gateway,log
 async function run(task){try{$('error').textContent='';await task();}catch(error){$('error').textContent=error.message;}}
 export async function mount(dependencies={}){
  gateway={api,authenticate,hasSession,logout,request,...dependencies};
- const initial=receiptTarget(window.location.href);$('direct-hint').hidden=!initial;
+ let initial=null;try{initial=receiptTarget(window.location.href);}catch{$('all-receipts').hidden=false;}
+ $('direct-hint').hidden=!initial; // run(state) renders invalid-link errors after handlers are bound.
  mountDetail(async()=>{if(!target)await refresh();},gateway.api);
  $('login-form').addEventListener('submit',event=>{event.preventDefault();run(async()=>{const button=event.submitter;button.disabled=true;try{await gateway.authenticate('admin',event.target.elements.password.value);event.target.reset();await state();}finally{button.disabled=false;}});});
  $('logout').addEventListener('click',()=>run(async()=>{try{await gateway.logout();}finally{showLogin();}}));
