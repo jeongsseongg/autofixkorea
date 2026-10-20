@@ -58,3 +58,10 @@ test('pre-activation primary and final queues are excluded before claim without 
   assert.equal(response.status,200);assert.equal((await response.json()).status,'before_forum_start');assert.equal(claims,0);assert.equal(writes,0);assert.equal(calls,0);
  }
 });
+
+test('future activation cannot send a new test-mode report early even when its scheduled cutoff is later',async()=>{
+ let claims=0;const t=dailyTelegram({token:'123:synthetic',chatId:'123456',forumTargets:targets.replace('T00:00:00Z','T12:00:00Z'),fetchImpl:async()=>{throw Error('unexpected send');}});
+ const handler=createDailyHandler({store:{queuedAt:async()=>null,claim:async()=>{claims++;}},transport:t,secret:'test',now:()=>new Date('2026-10-20T10:00:00Z'),log:()=>{}});
+ const r=await handler(new Request('https://local.invalid/autofix-analytics-daily/run',{method:'POST',headers:{'content-type':'application/json','x-autofix-analytics-secret':'test'},body:JSON.stringify({date:'2026-10-20',mode:'test'})}));
+ assert.equal((await r.json()).status,'before_forum_start');assert.equal(claims,0);
+});
