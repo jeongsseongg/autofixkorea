@@ -3,7 +3,7 @@ const media={paid:'광고',search:'검색(광고 여부 미확인)',social:'소�
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 export const count=value=>Number.isFinite(value)&&value>=0?value.toLocaleString('ko-KR'):'미수집';
 export const plain=value=>Array.from(String(value??'미수집').replace(/(?:\d[ _-]*){8,}/g,'[비공개]').replace(/\s+/g,' ')).slice(0,28).join('');
-export const keywordLabel=value=>/^(?:(?:n?kwd|keyword)[_-][a-z0-9_-]+|[a-f0-9]{16,}|\d{6,})$/i.test(String(value??''))?'키워드명 미확인(ID만 수집)':plain(value??'키워드 미수집');
+export const keywordLabel=value=>/^(?:(?:nkwd?|kwd|keyword)[_-][a-z0-9_-]+|[a-f0-9]{16,}|\d{6,})$/i.test(String(value??''))?'키워드명 미확인(ID만 수집)':plain(value??'키워드 미수집');
 export const sourceLabel=source=>`${channels[source?.channel]??channels.unknown}${source?.medium?' '+(media[source.medium]??media.unknown):''}`;
 const top=map=>[...map].sort((a,b)=>b[1]-a[1]).slice(0,2);
 const add=(map,key)=>map.set(key,(map.get(key)??0)+1);
