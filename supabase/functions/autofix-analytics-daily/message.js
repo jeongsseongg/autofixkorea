@@ -1,12 +1,12 @@
 import {problem} from '../autofix-analytics/contract.js';
-import {count,plain,sourceLabel,journeySummary} from './summary.js';
+import {count,plain,keywordLabel,sourceLabel,journeySummary} from './summary.js';
 const duration=value=>Number.isFinite(value)&&value>=0?`${String(Math.floor(value/60)).padStart(2,'0')}:${String(Math.floor(value%60)).padStart(2,'0')}`:'미수집';
 export function dailyMessage(report,{date,cutoff,final=false}){
  if(report.quality?.truncated)throw problem('REPORT_TRUNCATED',422);
  const s=report.summary??{},time=new Date(Date.parse(cutoff)+9*3600000).toISOString().slice(11,16);
  const j=journeySummary(report);
  const channels=(report.channels??[]).slice(0,3).map(row=>`${plain(row.label)} ${count(row.visits)}회`).join(' · ')||'미수집';
- const keywords=(report.keywords??[]).slice(0,3).map(row=>`${sourceLabel(row)} ${plain(row.term)} ${count(row.visits)}방문`).join(' / ')||'미수집';
+ const keywords=(report.keywords??[]).slice(0,3).map(row=>`${sourceLabel(row)} ${keywordLabel(row.term)} ${count(row.visits)}방문`).join(' / ')||'미수집';
  const abandoned=Array.isArray(report.routes)&&report.routes.every(row=>Number.isFinite(row.abandoned))?report.routes.reduce((n,row)=>n+row.abandoned,0):null;
  const next=s.formErrors>0?'접수 오류 원인 확인':s.unknownRate>20?'출처 미확인 링크 태그 점검':j.abandoned!=='없음'&&j.abandoned!=='확인불가'?'중단 상위 단계의 입력 편의 점검':'유입별 서버 연결 접수 표본 누적';
  return [
