@@ -136,6 +136,13 @@ test('timeout outcome is uncertain and provider reason remains sanitized',async(
  finally{globalThis.fetch=original;}
 });
 
+test('expired delivery budget never starts a Telegram request',async()=>{
+ const original=globalThis.fetch;let calls=0;
+ globalThis.fetch=async()=>{calls++;return Response.json({ok:true,result:{message_id:1,chat:{id:Number(target.chatId)}}});};
+ try{await assert.rejects(telegram('bot-test','sendMessage',{chat_id:target.chatId,text:'test'},1,Date.now()-1),/NOTIFICATION_BUDGET_PENDING/);assert.equal(calls,0);}
+ finally{globalThis.fetch=original;}
+});
+
 test('400 resume skips every already accepted operation, then never sends the receipt twice',async()=>{
  const originalFetch=globalThis.fetch,originalDeno=globalThis.Deno,originalTimer=globalThis.setTimeout;
  globalThis.Deno={env:{get:env}};
