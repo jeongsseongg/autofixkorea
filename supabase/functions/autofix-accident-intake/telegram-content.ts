@@ -1,5 +1,6 @@
 import {questions,conditionFields,serviceTypes,accidentTypes} from './form-fields.js';
 import {acquisitionLines} from './acquisition.js';
+import {receiptIdentity,receiptLayout} from './telegram-receipt-display.ts';
 const groups=[
  ['매입·수리 접수',['service','accidentType','contact']],
  ['차량 정보',['manufacturer','group','model','plate','year','mileage','region','fuel','owner']],
@@ -14,8 +15,9 @@ export function receiptText(row:any):string{
  Object.assign(labels,{airbagDetail:'에어백 전개 상세',financeAmount:'할부·저당 금액',financeDetail:'할부·저당 상세',unknownQuestions:'확인이 필요한 항목',vehiclePhotosLater:'차량 사진 추후 제출',interiorPhotosLater:'에어백·실내 사진 추후 제출'});
  const date=new Date(row.completed_at||row.created_at);
  const time=Number.isNaN(date.getTime())?'확인 필요':new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(date)+' (한국 시간)';
- const lines=['🚘 오토픽스코리아 | 새로운 차량 매입·수리 접수','접수번호: '+row.id,'접수일시: '+time];
- if(row.acquisition!==undefined)lines.push('', '[방문·유입 정보]', ...acquisitionLines(row.acquisition));
+ const clean=receiptLayout(row)>=3;
+ const lines=['🚘 오토픽스코리아 | 새로운 차량 매입·수리 접수','접수번호: '+(clean?receiptIdentity(row).label:row.id),'접수일시: '+time];
+ if(row.acquisition!==undefined)lines.push('', '[방문·유입 정보]', ...acquisitionLines(row.acquisition).filter(line=>!clean||!line.startsWith('익명 방문번호:')).map(line=>clean?line.replace('접속 기기: PC','접속 기기: 컴퓨터'):line));
  const used=new Set<string>();
  for(const [title,keys] of groups){
   const fields=keys.filter(key=>row.values[key]!==undefined&&row.values[key]!==null&&row.values[key]!=='');

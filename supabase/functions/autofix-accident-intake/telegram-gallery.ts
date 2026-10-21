@@ -3,7 +3,7 @@ import {receiptNotificationText} from './telegram-summary.ts';
 import {receiptButtons,receiptLayout,receiptIdentity} from './telegram-receipt-display.ts';
 // Photos arrive as Telegram albums so the client can save them to Photos/Gallery.
 export function galleryOperations(row:any){
- const text=receiptText(row),modern=receiptLayout(row)===2,reply_markup=receiptButtons(row);
+ const text=receiptText(row),modern=receiptLayout(row)>=2,reply_markup=receiptButtons(row);
  const operations:any[]=receiptParts(receiptNotificationText(row)).map((part,i)=>({kind:'text',text:part,...(i===0?{reply_markup}:{})}));
  let indices:number[]=[],bytes=0,documents=false;
  const flush=()=>{
