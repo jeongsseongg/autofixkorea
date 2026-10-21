@@ -3,7 +3,7 @@ let urls=[],generation=0;
 export function clearGallery(){generation++;urls.forEach(URL.revokeObjectURL);urls=[];}
 export function renderGallery(row,call){
  const version=generation,section=node('section','','receipt-gallery');
- const heading=node('div','','receipt-section-heading');heading.append(node('h3','차량 사진'),node('span',row.photos.length+' PHOTOS'));section.append(heading);
+ const heading=node('div','','receipt-section-heading');heading.append(node('h3','차량 사진'),node('span','총 '+row.photos.length+'장'));section.append(heading);
  if(!row.photos.length){const empty=node('div','','receipt-photo-empty');empty.append(node('span','사진 미첨부'),node('p','등록된 사진이 없습니다.'));section.append(empty);return section;}
  const stage=node('div','','receipt-photo-stage'),image=node('img'),loading=node('p','사진을 불러오는 중입니다.','receipt-photo-loading');image.hidden=true;stage.append(image,loading);
  const open=node('a','원본 열기 ↗','hub-button-secondary');open.target='_blank';open.rel='noopener noreferrer';

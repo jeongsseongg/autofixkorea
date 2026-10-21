@@ -7,8 +7,8 @@ function overview(row){
  const section=node('section','','receipt-overview'),heading=node('div'),badges=node('div','','receipt-badges');
  badges.append(node('span',serviceName(row.fields.service),'receipt-service'),node('span',statuses[row.progress]||'확인 필요','receipt-status'));
  badges.querySelector('.receipt-status').dataset.progress=row.progress;
- const short='AF-'+row.id.replaceAll('-','').slice(-8).toUpperCase();
- heading.append(badges,node('h3',vehicleName(row.fields)),node('p',short+' · '+receiptDate(row.created_at)+' 접수'));
+ const short=row.id.replaceAll('-','').slice(-8).toUpperCase();
+ heading.append(badges,node('h3',vehicleName(row.fields)),node('p','접수번호 '+short+' · '+receiptDate(row.created_at)+' 접수'));
  const contact=node('div','','receipt-contact'),phone=String(row.fields.contact||row.fields.phone||'').replace(/[^0-9]/g,'');
  contact.append(node('span',row.fields.name||'연락처'),node('strong',phone.replace(/^(0\d{2})(\d{3,4})(\d{4})$/,'$1-$2-$3')||'미입력'));
  if(/^0\d{9,10}$/.test(phone)){const copy=node('button','연락처 복사','hub-button-secondary');copy.type='button';copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(phone);copy.textContent='복사했습니다.';}catch{copy.textContent='복사하지 못했습니다.';}});contact.append(copy);}
