@@ -2,8 +2,8 @@ import {galleryOperations} from '../supabase/functions/autofix-accident-intake/t
 import {receiptOperations,attachmentBody} from '../supabase/functions/autofix-accident-intake/telegram-attachments.ts';
 import fixture from './fixtures/intake-v21-plans.json' with {type:'json'};
 const assert=(ok:unknown,message='assertion failed')=>{if(!ok)throw Error(message);};
-Deno.test('new receipt groups Korean fields, deduplicates model and supplies an authenticated direct link',()=>{
- const operations=galleryOperations({...fixture.row,photos:fixture.row.photos.slice(0,3)}),first=operations[0],text=first.text;
+Deno.test('frozen grouped receipt keeps its Korean fields, model and authenticated direct link',()=>{
+ const operations=galleryOperations({...fixture.row,photos:fixture.row.photos.slice(0,3),telegram_message_id:JSON.stringify({version:3,summary_format:true,receipt_layout:2,operations:{}})}),first=operations[0],text=first.text;
  assert(text.includes('\n\n차량\n'));assert(text.includes('\n\n연락처\n'));assert(text.includes('\n\n상태\n'));assert(text.includes('\n\n유입\n'));
  assert(text.includes('2026-10-20 22:55 KST'));assert(text.includes('현대 쏘나타'));assert(!text.includes('쏘나타 쏘나타'));
  assert(!text.split('\n').slice(0,3).join('').includes(fixture.row.id));assert(text.includes(fixture.row.id));
