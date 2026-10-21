@@ -1,13 +1,16 @@
 import {targetMatches} from '../_shared/telegram-forum.js';
-export async function telegram(token:string,method:string,body:FormData|object,count=1){
+import {providerError} from './notification-state.ts';
+export async function telegram(token:string,method:string,body:FormData|object,count=1,deadline?:number){
  let r:Response,data:any;
+ const timeout=deadline?Math.min(60000,deadline-Date.now()-32000):60000;
+ if(timeout<=0)throw Error('NOTIFICATION_BUDGET_PENDING');
  try{
   const multipart=body instanceof FormData;
-  r=await fetch('https://api.telegram.org/bot'+token+'/'+method,{method:'POST',headers:multipart?{}:{'Content-Type':'application/json'},body:multipart?body:JSON.stringify(body),signal:AbortSignal.timeout(60000)});
+  r=await fetch('https://api.telegram.org/bot'+token+'/'+method,{method:'POST',headers:multipart?{}:{'Content-Type':'application/json'},body:multipart?body:JSON.stringify(body),signal:AbortSignal.timeout(timeout)});
   data=await r.json();
  }catch{throw Error('TELEGRAM_OUTCOME_UNKNOWN');}
  if(r.status>=500)throw Error('TELEGRAM_OUTCOME_UNKNOWN');
- if(!r.ok||!data.ok)throw Error('TELEGRAM_HTTP_'+r.status);
+ if(!r.ok||!data.ok)throw providerError(r.status,data);
  const messages=Array.isArray(data.result)?data.result:[data.result];
  const ids=messages.map((m:any)=>m?.message_id);
  if(ids.length!==count||ids.some((id:any)=>!Number.isInteger(id)||id<=0)||new Set(ids).size!==count)throw Error('TELEGRAM_OUTCOME_UNKNOWN');

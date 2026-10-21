@@ -50,7 +50,7 @@ function queueNotification(id:string){
  EdgeRuntime.waitUntil(notifySafely(id));return 'processing';
 }
 async function notifySafely(id:string){
- try{return await notifyReceipt(id,request);}
+ try{return await notifyReceipt(id,request,{maxOperations:2,deadline:Date.now()+95000});}
  catch{console.error(JSON.stringify({traceId:id,code:'NOTIFICATION_PENDING'}));return 'pending';}
 }
 Deno.serve(async(req:Request)=>{
