@@ -62,6 +62,8 @@ test('worker endpoint rejects anonymous and worker-key test replay; health is re
  const services={env,health:async()=>{healthCalls++;return {ok:true};},rest:async()=>{throw Error('DB must not be called');}};
  const request=(body,headers={})=>new Request('https://local.invalid',{method:'POST',headers:{'content-type':'application/json',...headers},body:JSON.stringify(body)});
  assert.equal((await handleRequest(request({action:'retry'}),services)).status,401);
+ assert.equal((await handleRequest(request({action:'health'}),services)).status,401);
+ assert.equal((await handleRequest(request({action:'health'},{'x-worker-key':''}),{...services,env:()=>''})).status,401);
  assert.equal((await handleRequest(request({action:'retry',ids:[id],includeTest:true},{'x-worker-key':'worker-test'}),services)).status,403);
  assert.equal((await handleRequest(request({action:'health'},{'x-worker-key':'worker-test'}),services)).status,200);
  assert.equal(healthCalls,1);
@@ -107,8 +109,12 @@ test('400 resume skips every already accepted operation, then never sends the re
  const originalFetch=globalThis.fetch,originalDeno=globalThis.Deno,originalTimer=globalThis.setTimeout;
  globalThis.Deno={env:{get:env}};
  globalThis.setTimeout=(callback,delay,...args)=>originalTimer(callback,delay===1100?0:delay,...args);
- let current=row(null),calls=0,nextId=100;
- globalThis.fetch=async()=>{calls++;return Response.json({ok:true,result:{message_id:nextId++,chat:{id:Number(target.chatId)},message_thread_id:8}});};
+ let current={...row(null),photos:[{path:id+'/0.png',size:12,mime:'image/png',category:'vehicle'}]},calls=0,nextId=100;
+ globalThis.fetch=async(url,init)=>{
+  if(String(url).includes('/storage/'))return new Response(new Uint8Array(12));
+  calls++;const form=init?.body instanceof FormData,reply=form&&init.body.get('reply_parameters')?JSON.parse(init.body.get('reply_parameters')):null;
+  return Response.json({ok:true,result:{message_id:nextId++,chat:{id:Number(target.chatId)},message_thread_id:8,...(reply?{reply_to_message:{message_id:reply.message_id}}:{})}});
+ };
  const rest=async(path,method='GET',body)=>{
   if(path.includes('autofix_claim_telegram'))return current.telegram_status!=='sent';
   if(path.includes('autofix_intake_acquisition'))return [{context:null}];
@@ -117,11 +123,32 @@ test('400 resume skips every already accepted operation, then never sends the re
  try{
   assert.equal(await notifyGalleryReceipt(id,rest),'sent');const accepted=calls;
   assert.equal(await notifyGalleryReceipt(id,rest),'already_sent_or_busy');assert.equal(calls,accepted);
-  const progress=JSON.parse(current.telegram_message_id);progress.operations[0]={state:'blocked'};
+  assert.equal(accepted,2);const progress=JSON.parse(current.telegram_message_id);progress.operations[1]={state:'blocked'};
   current.telegram_status='pending';current.telegram_error='TELEGRAM_HTTP_400';current.telegram_message_id=JSON.stringify(progress);
   assert.equal(await notifyGalleryReceipt(id,rest,{resumeRejected:true}),'sent');assert.equal(calls,accepted+1);
   const stable=JSON.parse(current.telegram_message_id);stable.operations[0]={state:'uncertain'};
   current.telegram_status='pending';current.telegram_error='TELEGRAM_OUTCOME_UNKNOWN';current.telegram_message_id=JSON.stringify(stable);
   assert.equal(await notifyGalleryReceipt(id,rest,{resumeRejected:true}),'pending');assert.equal(calls,accepted+1);
+  current=row(null);current.photos=[{path:id+'/0.png',size:12,mime:'image/png',category:'vehicle'}];
+  const batchStart=calls;
+  assert.equal(await notifyGalleryReceipt(id,rest,{maxOperations:1}),'pending');assert.equal(calls,batchStart+1);
+  assert.equal(await notifyGalleryReceipt(id,rest,{maxOperations:1}),'sent');assert.equal(calls,batchStart+2);
  }finally{globalThis.fetch=originalFetch;globalThis.setTimeout=originalTimer;if(originalDeno===undefined)delete globalThis.Deno;else globalThis.Deno=originalDeno;}
+});
+
+test('real 429 delivery saves retry_after and refuses an immediate resend',async()=>{
+ const originalFetch=globalThis.fetch,originalDeno=globalThis.Deno;globalThis.Deno={env:{get:env}};
+ let current=row(null),calls=0;const before=Date.now();
+ globalThis.fetch=async()=>{calls++;return Response.json({ok:false,error_code:429,description:'Too Many Requests',parameters:{retry_after:240}},{status:429});};
+ const rest=async(path,method='GET',body)=>{
+  if(path.includes('autofix_claim_telegram'))return true;
+  if(path.includes('autofix_intake_acquisition'))return [];
+  if(method==='PATCH'){Object.assign(current,body);return null;}return [structuredClone(current)];
+ };
+ try{
+  assert.equal(await notifyGalleryReceipt(id,rest),'pending');const saved=JSON.parse(current.telegram_message_id);
+  assert.equal(saved.operations[0].state,'retryable');assert.equal(saved.operations[0].error.retryAfter,240);
+  assert.ok(Date.parse(saved.operations[0].retryAt)>=before+240000);
+  assert.equal(await notifyGalleryReceipt(id,rest),'pending');assert.equal(calls,1);
+ }finally{globalThis.fetch=originalFetch;if(originalDeno===undefined)delete globalThis.Deno;else globalThis.Deno=originalDeno;}
 });
