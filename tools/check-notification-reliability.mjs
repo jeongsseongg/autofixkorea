@@ -82,6 +82,42 @@ test('worker endpoint rejects anonymous and worker-key test replay; health is re
  assert.equal(healthCalls,1);
 });
 
+test('alternate service-role credential is verified with its own API key before admin test replay',async()=>{
+ const supplied='alternate-service-credential',calls=[];
+ const request=new Request('https://local.invalid',{method:'POST',headers:{Authorization:'Bearer '+supplied},
+  body:JSON.stringify({action:'retry',ids:[id],includeTest:true})});
+ const response=await handleRequest(request,{env,health:async()=>({ok:false,reason:'FROZEN_METHOD_INVALID'}),
+  rest:async()=>{throw Error('Frozen health may not touch the DB');},fetch:async(url,init)=>{
+   calls.push({url:String(url),init});return Response.json(true);
+  }});
+ assert.equal(response.status,200);assert.equal((await response.json()).status,'health_blocked');assert.equal(calls.length,1);
+ assert.equal(calls[0].url,secrets.SUPABASE_URL+'/rest/v1/rpc/autofix_notification_authorize');
+ const headers=new Headers(calls[0].init.headers);assert.equal(headers.get('apikey'),supplied);
+ assert.equal(headers.get('authorization'),'Bearer '+supplied);assert.equal(calls[0].init.method,'POST');
+ assert.equal(calls[0].init.body,'{}');assert.ok(calls[0].init.signal);
+});
+
+test('admin credential fallback rejects unknown keys, failed RPCs, and nonliteral authorization results',async()=>{
+ let healthCalls=0;
+ for(const answer of [()=>Response.json(false),()=>Response.json({authorized:true}),()=>Response.json('true'),
+  ()=>Response.json(true,{status:201}),()=>Response.json(true,{status:401}),()=>new Response('invalid json'),()=>{throw Error('private credential detail');}]){
+  let calls=0;
+  const response=await handleRequest(new Request('https://local.invalid',{method:'POST',headers:{Authorization:'Bearer unknown-key'},
+   body:JSON.stringify({action:'health'})}),{env,health:async()=>{healthCalls++;return {ok:true};},fetch:async()=>{calls++;return answer();}});
+  assert.equal(response.status,401);assert.equal(calls,1);const body=await response.json();
+  assert.equal(body.code,'UNAUTHORIZED');assert.equal(JSON.stringify(body).includes('private credential'),false);
+ }
+ assert.equal(healthCalls,0);
+});
+
+test('matching service credential avoids fallback and missing credentials never trigger a validation request',async()=>{
+ const request=value=>new Request('https://local.invalid',{method:'POST',headers:value?{Authorization:value}:{},body:JSON.stringify({action:'health'})});
+ let calls=0;const services={env,health:async()=>({ok:true}),fetch:async()=>{calls++;throw Error('Not expected');}};
+ assert.equal((await handleRequest(request('Bearer '+secrets.SUPABASE_SERVICE_ROLE_KEY),services)).status,200);
+ for(const credential of [null,'Bearer ','Basic untrusted'])assert.equal((await handleRequest(request(credential),services)).status,401);
+ assert.equal(calls,0);
+});
+
 test('worker performs no DB writes or sends while bot is frozen',async()=>{
  let touched=0;
  const result=await runRetries({limit:2},{env,now:()=>now,health:async()=>({ok:false,reason:'FROZEN_METHOD_INVALID'}),rest:async()=>{touched++;},notify:async()=>{touched++;}});
