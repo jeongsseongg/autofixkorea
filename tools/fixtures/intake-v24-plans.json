@@ -1,0 +1,103 @@
+{
+  "row": {
+    "id": "11111111-1111-4111-8111-111111111111",
+    "created_at": "2026-10-20T13:55:00Z",
+    "values": {
+      "service": "accidentSale",
+      "contact": "01000000000",
+      "manufacturer": "현대",
+      "group": "쏘나타",
+      "model": "쏘나타",
+      "year": "2020",
+      "mileage": "30000",
+      "region": "서울",
+      "damagePart": "앞범퍼",
+      "memo": "합성 원문 보존"
+    },
+    "photos": [
+      {
+        "path": "11111111-1111-4111-8111-111111111111/0.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/1.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/2.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/3.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/4.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/5.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/6.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/7.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/8.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/9.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/10.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      },
+      {
+        "path": "11111111-1111-4111-8111-111111111111/11.png",
+        "size": 12,
+        "mime": "image/png",
+        "category": "vehicle"
+      }
+    ],
+    "acquisition": null,
+    "telegram_message_id": "{\"version\":3,\"summary_format\":true,\"receipt_layout\":3,\"acquisition_format\":true,\"operations\":{}}"
+  },
+  "digests": {
+    "gallery": "4ed28be8417750fbeca92ad0d170171b9ba95ace9218786cd9d2321c2b07f85c",
+    "legacy": "527c5f8b8b51d74af0154ff0160ccbf6fa665e726b4ca316febd09486db47872"
+  },
+  "replyDigests": {
+    "1": "015539fd302e9df4a0d9bb98e11806f1ef048f37329acdc3e8cead0baa32513b",
+    "2": "c70b2d72ff6b0dd82e66bae3fd05ef43e54912269faeda5f9f5f52a4edd7892b",
+    "11": "a0b79652aa241c865e7c5beaeae4bb40de9303b5d1fe150bc270190e8b230c62"
+  }
+}

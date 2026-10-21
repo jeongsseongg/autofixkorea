@@ -1,14 +1,14 @@
 import {notifyGalleryReceipt} from '../supabase/functions/autofix-accident-intake/telegram.ts';
 import {receiptLayout} from '../supabase/functions/autofix-accident-intake/telegram-receipt-display.ts';
 import {telegram} from '../supabase/functions/autofix-accident-intake/telegram-transport.ts';
-import fixture from './fixtures/intake-v21-plans.json' with {type:'json'};
+import fixture from './fixtures/intake-v24-plans.json' with {type:'json'};
 const assert=(ok:unknown,message='assertion failed')=>{if(!ok)throw Error(message);};
 for(const count of [1,2,11])Deno.test(`receipt ${count} photos reply to the accepted summary without duplicate sends`,async()=>{
  const keys=['AUTOFIX_TELEGRAM_BOT_TOKEN','AUTOFIX_TELEGRAM_FORUM_TARGETS','SUPABASE_URL','SUPABASE_SERVICE_ROLE_KEY'],old=keys.map(k=>Deno.env.get(k));
  const fetchOriginal=globalThis.fetch,timerOriginal=globalThis.setTimeout;
  Deno.env.set(keys[0],'local-test');Deno.env.set(keys[1],JSON.stringify({startsAt:'2026-10-20T00:00:00Z',intake:{chatId:'-1001234567890',threadId:8},daily:{chatId:'-1001234567890',threadId:9}}));Deno.env.set(keys[2],'https://local.invalid');Deno.env.set(keys[3],'local-test');
  globalThis.setTimeout=((callback:any,ms?:number,...args:any[])=>timerOriginal(callback,ms===1100?0:ms,...args)) as typeof setTimeout;
- let current:any=structuredClone({...fixture.row,photos:fixture.row.photos.slice(0,count)}),messageId=100;const expectedLayout=receiptLayout(current);
+ let current:any=structuredClone({...fixture.row,photos:fixture.row.photos.slice(0,count),telegram_message_id:JSON.stringify({...JSON.parse(fixture.row.telegram_message_id),digest:fixture.replyDigests[String(count) as keyof typeof fixture.replyDigests]})}),messageId=100;const expectedLayout=receiptLayout(current);
  const calls:any[]=[];
  globalThis.fetch=async(input,init)=>{
   if(String(input).includes('/storage/'))return new Response(new Uint8Array(12),{headers:{'content-type':'image/png'}});

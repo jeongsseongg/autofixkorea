@@ -1,10 +1,10 @@
 export function receiptCheckpoint(row:any){try{return JSON.parse(row.telegram_message_id||'null');}catch{return null;}}
-export function receiptLayout(row:any){const saved=receiptCheckpoint(row);return !saved||saved.receipt_layout===3?3:saved.receipt_layout===2?2:1;}
+export function receiptLayout(row:any){const saved=receiptCheckpoint(row);return !saved||saved.receipt_layout===4?4:saved.receipt_layout===3?3:saved.receipt_layout===2?2:1;}
 export const receiptShort=(value:unknown,max=80)=>Array.from(String(value??'확인 필요').replace(/\s+/g,' ').trim()).slice(0,max).join('');
-export function vehicleTitle(values:any){
- const parts=[values.manufacturer,values.group,values.model].filter(v=>typeof v==='string'&&v.trim()).map(v=>receiptShort(v,90));
+export function vehicleTitle(values:any,limit=90){
+ const parts=[values.manufacturer,values.group,values.model].filter(v=>typeof v==='string'&&v.trim()).map(v=>receiptShort(v,limit));
  const normal=(v:string)=>v.toLocaleLowerCase().replace(/[()_/·-]+/g,' ').replace(/\s+/g,' ').trim();
- return receiptShort(parts.filter((v,i)=>!parts.some((other,j)=>j!==i&&(normal(other)===normal(v)?j<i:(' '+normal(other)+' ').includes(' '+normal(v)+' ')))).join(' ')||'차량 정보 확인 필요',90);
+ return receiptShort(parts.filter((v,i)=>!parts.some((other,j)=>j!==i&&(normal(other)===normal(v)?j<i:(' '+normal(other)+' ').includes(' '+normal(v)+' ')))).join(' ')||'차량 정보 확인 필요',limit);
 }
 export function receiptIdentity(row:any){
  const date=new Date(row.completed_at||row.created_at),valid=Number.isFinite(+date);

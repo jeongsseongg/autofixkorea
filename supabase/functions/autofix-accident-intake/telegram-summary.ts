@@ -1,10 +1,12 @@
 import {serviceTypes} from './form-fields.js';
 import {acquisition,acquisitionLines} from './acquisition.js';
 import {receiptText} from './telegram-content.ts';
+import {readableReceipt} from './telegram-readable.ts';
 import {receiptCheckpoint,receiptLayout,receiptIdentity,receiptShort} from './telegram-receipt-display.ts';
 const short=(value:unknown,max=70)=>Array.from(String(value??'미입력').replace(/\s+/g,' ')).slice(0,max).join('');
 export function receiptNotificationText(row:any){
  // A legacy checkpoint must reproduce its exact original operations and hash.
+ if(receiptLayout(row)>=4)return readableReceipt(row);
  const saved=receiptCheckpoint(row);
  return saved&&saved.summary_format!==true?receiptText(row):receiptLayout(row)>=2?receiptSummary(row):compactReceiptSummary(row);
 }

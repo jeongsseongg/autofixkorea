@@ -3,8 +3,8 @@ import {receiptOperations,attachmentBody} from '../supabase/functions/autofix-ac
 import {receiptIdentity} from '../supabase/functions/autofix-accident-intake/telegram-receipt-display.ts';
 import fixture from './fixtures/intake-v22-plans.json' with {type:'json'};
 const assert=(ok:unknown,message='assertion failed')=>{if(!ok)throw Error(message);};
-const fresh=()=>({...structuredClone(fixture.row),telegram_message_id:null,acquisition:{visit:'22222222-2222-4222-8222-222222222222',view:'33333333-3333-4333-8333-333333333333',device:'desktop',mode:'live',source:{channel:'unknown',medium:'unknown',confidence:'unknown',tagged:false}}});
-Deno.test('new notification and text file hide internal IDs and use Korean labels',async()=>{
+const fresh=()=>({...structuredClone(fixture.row),telegram_message_id:JSON.stringify({version:3,summary_format:true,receipt_layout:3,operations:{}}),acquisition:{visit:'22222222-2222-4222-8222-222222222222',view:'33333333-3333-4333-8333-333333333333',device:'desktop',mode:'live',source:{channel:'unknown',medium:'unknown',confidence:'unknown',tagged:false}}});
+Deno.test('numeric-layout notification and text file hide internal IDs and use Korean labels',async()=>{
  const row=fresh(),operations=galleryOperations(row),summary=operations[0],receipt=operations.find(o=>o.kind==='receipt'),identity=receiptIdentity(row);
  assert(/^\d{8}-\d{10}$/.test(identity.label));assert(identity.time.endsWith('한국 시간'));
  for(const text of [summary.text,receipt.text,receipt.caption]){
