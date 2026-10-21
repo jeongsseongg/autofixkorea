@@ -45,6 +45,15 @@ test('known 400 rejection can resume only after healthy worker; backoff and atte
  progress.reliability={attempts:3,nextAttemptAt:new Date(now-1000).toISOString()};assert.equal(decision(row(progress)).allowed,false);
 });
 
+test('expired row lease recovers only when no operation has an uncertain outcome',()=>{
+ const stale={...row(null),telegram_status:'sending',telegram_claimed_at:new Date(now-301000).toISOString()};
+ assert.equal(decision(stale).allowed,true);
+ assert.equal(decision({...stale,telegram_claimed_at:new Date(now-1000).toISOString()}).allowed,false);
+ for(const state of ['sending','uncertain'])assert.equal(decision({...stale,telegram_message_id:JSON.stringify(checkpoint({0:{state}}))}).allowed,false);
+ const accepted=checkpoint({0:{state:'sent',providerId:{messageIds:[111]}}});
+ assert.equal(decision({...stale,telegram_message_id:JSON.stringify(accepted)}).allowed,true);
+});
+
 test('health detects frozen membership without invoking send methods',async()=>{
  const methods=[];
  const health=await checkHealth(env,async(url)=>{
