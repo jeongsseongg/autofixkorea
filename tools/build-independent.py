@@ -47,6 +47,10 @@ for route in routes:
     for frame in list(page.find_all('iframe')):
         frame.decompose()
     policy="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://ytigiculewerivyytxza.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    if route['path'] not in ['/hub/','/listings/','/analytics/']:
+        policy=policy.replace("script-src 'self'", "script-src 'self' https://wcs.naver.net/wcslog.js")
+        policy=policy.replace("img-src 'self' data: blob:", "img-src 'self' data: blob: https://wcs.naver.com")
+        policy=policy.replace("connect-src 'self'", "connect-src 'self' https://wcs.naver.com")
     page.head.insert(0,page.new_tag('meta',attrs={'http-equiv':'Content-Security-Policy','content':policy}))
     page.select_one('link[rel=canonical]')['href']='https://www.autofixkorea.com'+route['path']
     path=OUT/('index.html' if route['path']=='/' else route['path'].strip('/')+'/index.html')

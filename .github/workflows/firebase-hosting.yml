@@ -26,6 +26,7 @@ jobs:
       - run: pip install -r tools/requirements.txt
       - run: npm ci
       - run: npm run build:production && npm run check:independent && npm run check:listings
+      - run: node --experimental-strip-types tools/check-notification-reliability.mjs
       - uses: google-github-actions/auth@v3
         if: github.ref == 'refs/heads/main' && vars.AUTOFIX_FIREBASE_CI_ENABLED == 'true'
         with:
