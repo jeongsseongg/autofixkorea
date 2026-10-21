@@ -1,7 +1,7 @@
 import {receiptText,receiptParts} from './telegram-content.ts';
 import {photoArchive} from './telegram-archive.ts';
 import {receiptNotificationText} from './telegram-summary.ts';
-import {receiptButtons} from './telegram-receipt-display.ts';
+import {receiptButtons,receiptIdentity,receiptLayout} from './telegram-receipt-display.ts';
 export function receiptOperations(row:any){
  const text=receiptText(row),reply_markup=receiptButtons(row);
  const operations:any[]=receiptParts(receiptNotificationText(row)).map((part,i)=>({kind:'text',text:part,...(i===0?{reply_markup}:{})}));
@@ -28,22 +28,25 @@ async function original(row:any,index:number){
  if(!r.ok)throw Error('PHOTO_DOWNLOAD_FAILED');
  const blob=await r.blob();if(blob.size!==p.size)throw Error('PHOTO_SIZE_MISMATCH');return blob;
 }
-function filename(row:any,index:number){return 'autofix-'+row.id+'-'+String(index+1).padStart(2,'0')+'-'+(row.photos[index].category==='interior'?'interior':'vehicle')+'.'+row.photos[index].path.split('.').pop();}
+function filename(row:any,index:number,archive=false){
+ const prefix=receiptLayout(row)>=3&&!archive?`접수-${receiptIdentity(row).label}-${row.photos[index].category==='interior'?'실내사진':'차량사진'}-`:'autofix-'+row.id+'-';
+ return prefix+String(index+1).padStart(2,'0')+(receiptLayout(row)>=3&&!archive?'':'-'+(row.photos[index].category==='interior'?'interior':'vehicle'))+'.'+row.photos[index].path.split('.').pop();
+}
 export async function attachmentBody(row:any,operation:any,chat:string,asDocument=false){
  const body=new FormData();body.set('chat_id',chat);body.set('protect_content','false');
  if(operation.kind==='receipt'){
-  body.set('document',new Blob(['\uFEFF'+operation.text],{type:'text/plain;charset=utf-8'}),'autofix-'+row.id+'-receipt.txt');
-  body.set('caption',operation.caption||'접수 글 저장 · '+row.id);return {method:'sendDocument',body,count:1};
+  body.set('document',new Blob(['\uFEFF'+operation.text],{type:'text/plain;charset=utf-8'}),receiptLayout(row)>=3?'접수-'+receiptIdentity(row).label+'-접수내용.txt':'autofix-'+row.id+'-receipt.txt');
+  body.set('caption',operation.caption||'접수 글 저장 · '+(receiptLayout(row)>=3?receiptIdentity(row).label:row.id));return {method:'sendDocument',body,count:1};
  }
  if(operation.kind==='archive'){
-  const entries=[];for(const index of operation.indices)entries.push({name:filename(row,index),blob:await original(row,index)});
+  const entries=[];for(const index of operation.indices)entries.push({name:filename(row,index,true),blob:await original(row,index)});
   body.set('document',await photoArchive(entries),'autofix-'+row.id+'-photos-'+operation.part+'.zip');
   body.set('caption','사진 원본 묶음 다운로드 · '+operation.indices.length+'장 · '+operation.part+'번 파일\n앨범 사진은 휴대폰의 갤러리 자동 저장 설정을 켜면 저장됩니다. ZIP 원본은 파일 앱에 저장됩니다.');
   return {method:'sendDocument',body,count:1};
  }
  const indices=operation.kind==='album'?operation.indices:[operation.index];
  const type=operation.kind==='original'||asDocument?'document':'photo';
- const caption=operation.caption||'접수번호: '+row.id+'\n'+(row.photos[indices[0]].category==='interior'?'실내':'차량')+' 사진 '+(indices[0]+1)+' / '+row.photos.length+' · 원본 저장';
+ const caption=operation.caption||'접수번호: '+(receiptLayout(row)>=3?receiptIdentity(row).label:row.id)+'\n'+(row.photos[indices[0]].category==='interior'?'실내':'차량')+' 사진 '+(indices[0]+1)+' / '+row.photos.length+' · 원본 저장';
  const media=[];
  for(const [position,index] of indices.entries()){
   const name=indices.length===1?type:'file'+position;
