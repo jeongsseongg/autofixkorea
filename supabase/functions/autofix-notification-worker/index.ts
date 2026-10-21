@@ -1,13 +1,13 @@
 import {runRetries} from './worker.ts';
 import {checkHealth} from './health.ts';
+import {authorizeAdmin} from './auth.ts';
 
-type Services={env:(name:string)=>string,rest?:(path:string,method?:string,body?:unknown)=>Promise<any>,health?:()=>Promise<any>};
+type Services={env:(name:string)=>string,rest?:(path:string,method?:string,body?:unknown)=>Promise<any>,health?:()=>Promise<any>,fetch?:typeof fetch};
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 export async function handleRequest(req:Request,services:Services){
  const traceId=crypto.randomUUID(),reply=(body:object,status=200)=>Response.json({...body,traceId},{status,headers:{'Cache-Control':'no-store'}});
  if(req.method!=='POST')return reply({code:'METHOD_NOT_ALLOWED'},405);
- const env=services.env,service=env('SUPABASE_SERVICE_ROLE_KEY');
- const admin=!!service&&req.headers.get('authorization')==='Bearer '+service;
+ const env=services.env,admin=await authorizeAdmin(req,env,services.fetch);
  let rest=services.rest;
  if(!admin){
   const key=req.headers.get('x-worker-key')||'';

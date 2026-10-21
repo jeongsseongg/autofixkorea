@@ -17,6 +17,14 @@ begin
 end;
 $guard$;
 
+-- Validate a current service-role credential through PostgREST, including rotations.
+create function public.autofix_notification_authorize()
+returns boolean language sql security invoker set search_path = '' as $auth$
+  select auth.role() = 'service_role';
+$auth$;
+revoke all on function public.autofix_notification_authorize() from public, anon, authenticated;
+grant execute on function public.autofix_notification_authorize() to service_role;
+
 select cron.schedule(
   'autofix-notification-retry',
   '*/5 * * * *',
