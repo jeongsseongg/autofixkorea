@@ -9,8 +9,8 @@ import {handleRequest} from '../supabase/functions/autofix-notification-worker/i
 
 const target={chatId:'-1001234567890',threadId:8,forum:true,startsAt:'2026-10-20T00:00:00Z'};
 const now=Date.parse('2026-10-21T12:00:00Z'),id='c895b0f4-8c58-4f9b-802f-2924a1aa12c5';
-const secrets={SUPABASE_URL:'https://local.invalid',SUPABASE_SERVICE_ROLE_KEY:'service-test',
- AUTOFIX_ANALYTICS_WORKER_KEY:'worker-test',AUTOFIX_TELEGRAM_BOT_TOKEN:'bot-test',
+const workerKey='a'.repeat(64);
+const secrets={SUPABASE_URL:'https://local.invalid',SUPABASE_SERVICE_ROLE_KEY:'service-test',AUTOFIX_TELEGRAM_BOT_TOKEN:'bot-test',
  AUTOFIX_TELEGRAM_FORUM_TARGETS:JSON.stringify({startsAt:target.startsAt,intake:{chatId:target.chatId,threadId:8},daily:{chatId:target.chatId,threadId:9}})};
 const env=name=>secrets[name]||'';
 const checkpoint=operations=>({version:3,digest:'frozen',receipt_layout:4,destination:{chatId:target.chatId,threadId:8},operations});
@@ -59,13 +59,17 @@ test('health detects frozen membership without invoking send methods',async()=>{
 
 test('worker endpoint rejects anonymous and worker-key test replay; health is read-only',async()=>{
  let healthCalls=0;
- const services={env,health:async()=>{healthCalls++;return {ok:true};},rest:async()=>{throw Error('DB must not be called');}};
+ const services={env,health:async()=>{healthCalls++;return {ok:true};},rest:async(path,method,body)=>{
+  if(path==='/rest/v1/rpc/autofix_analytics_daily_authorize')return body.p_secret===workerKey;
+  throw Error('Only authorization may touch the DB during health');
+ }};
  const request=(body,headers={})=>new Request('https://local.invalid',{method:'POST',headers:{'content-type':'application/json',...headers},body:JSON.stringify(body)});
  assert.equal((await handleRequest(request({action:'retry'}),services)).status,401);
  assert.equal((await handleRequest(request({action:'health'}),services)).status,401);
  assert.equal((await handleRequest(request({action:'health'},{'x-worker-key':''}),{...services,env:()=>''})).status,401);
- assert.equal((await handleRequest(request({action:'retry',ids:[id],includeTest:true},{'x-worker-key':'worker-test'}),services)).status,403);
- assert.equal((await handleRequest(request({action:'health'},{'x-worker-key':'worker-test'}),services)).status,200);
+ assert.equal((await handleRequest(request({action:'health'},{'x-worker-key':'b'.repeat(64)}),services)).status,401);
+ assert.equal((await handleRequest(request({action:'retry',ids:[id],includeTest:true},{'x-worker-key':workerKey}),services)).status,403);
+ assert.equal((await handleRequest(request({action:'health'},{'x-worker-key':workerKey}),services)).status,200);
  assert.equal(healthCalls,1);
 });
 
@@ -88,6 +92,7 @@ test('worker claims no more than two live records and persists capped retry meta
  const result=await runRetries({limit:2},{env,now:()=>now,health:async()=>({ok:true}),rest,notify:async()=>{sends++;return 'sent';}});
  assert.equal(sends,2);assert.equal(claims,2);assert.equal(result.processed,2);
  const saved=JSON.parse(patches[0].telegram_message_id).reliability;assert.equal(saved.attempts,1);assert.ok(Date.parse(saved.nextAttemptAt)>now);
+ const seeded=JSON.parse(patches[0].telegram_message_id);assert.equal(seeded.receipt_layout,4);assert.equal(seeded.acquisition_format,true);
 });
 
 test('worker skips synthetic records unless authenticated explicit test ids were supplied',async()=>{
@@ -96,6 +101,32 @@ test('worker skips synthetic records unless authenticated explicit test ids were
  const services={env,now:()=>now,health:async()=>({ok:true}),rest,notify:async()=>{sends++;return 'sent';}};
  await runRetries({limit:1},services);assert.equal(sends,0);
  await runRetries({ids:[id],includeTest:true,limit:1},services);assert.equal(sends,1);
+});
+
+test('excluded first page never hides an eligible later pending receipt',async()=>{
+ const excluded=Array.from({length:10},()=>({...row(null),telegram_error:'TELEGRAM_OUTCOME_UNKNOWN'}));
+ let sent=0;
+ const rest=async(path,method='GET',body)=>{
+  if(path.includes('autofix_claim_telegram'))return true;
+  if(path.includes('autofix_intake_acquisition'))return [];
+  if(method==='PATCH')return null;
+  if(path.includes('id=eq.'))return [row(null)];
+  return Number(new URL('https://local.invalid'+path).searchParams.get('offset')||0)===0?excluded:[row(null)];
+ };
+ const result=await runRetries({limit:1},{env,rest,now:()=>now,health:async()=>({ok:true}),notify:async()=>{sent++;return 'sent';}});
+ assert.equal(sent,1);assert.equal(result.processed,1);
+});
+
+test('healthy text membership with denied photo or document permission is not ready',async()=>{
+ for(const denied of ['can_send_photos','can_send_documents']){
+  const health=await checkHealth(env,async(url)=>{
+   const method=String(url).split('/').at(-1);
+   if(method==='getMe')return Response.json({ok:true,result:{id:123,is_bot:true}});
+   if(method==='getChat')return Response.json({ok:true,result:{id:Number(target.chatId),is_forum:true}});
+   return Response.json({ok:true,result:{user:{id:123},status:'restricted',is_member:true,can_send_messages:true,can_send_photos:true,can_send_documents:true,[denied]:false}});
+  });
+  assert.equal(health.ok,false);assert.equal(health.reason,'HEALTH_MEDIA_PERMISSION_DENIED');
+ }
 });
 
 test('timeout outcome is uncertain and provider reason remains sanitized',async()=>{
